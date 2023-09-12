@@ -1,0 +1,20 @@
+/* CSS */
+.dark-theme-modal {
+    .modal-content {
+      background-color: #333; /* Dark background color */
+      color: #fff; /* Light text color */
+    }
+  
+    .modal-header {
+      border-bottom: none; /* Remove border under header */
+    }
+  
+    .modal-body {
+      /* Customize body styles as needed */
+    }
+  
+    .modal-footer {
+      /* Customize footer styles as needed */
+    }
+  }
+  

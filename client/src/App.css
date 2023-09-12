@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+  background-color: #282c34;
+  margin: auto;
+  height: 100%;
+  justify-content: center;
+}
+
+.app-content {
+  text-align: center;
+  background-color: #282c34;
+  margin: auto;
+  height: 90vh;
+  width: 50%;
+  justify-content: center;
+}
+
+html {
+  background-color: #282c34;
+  margin: 0; /* Optionally, remove default margin to fill the entire viewport */
+  padding: 0; /* Optionally, remove default padding to fill the entire viewport */
+}
+
+

@@ -1,0 +1,30 @@
+/* Tab Component Styles */
+
+/* Tabs container */
+.tabs {
+    display: flex;
+    background-color: #000;
+    color: #fff;
+    border-radius: 8px;
+    
+  }
+  
+  /* Tab button */
+  .tab {
+    flex: 1;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+  }
+  
+  /* Selected tab */
+  .tab.active {
+    background-color: #333; /* Dark grey */
+  }
+  
+  
