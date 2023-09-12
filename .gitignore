@@ -1,0 +1,184 @@
+# Node.js
+node_modules/
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw??
+*.sln.docstates
+
+# Build and output files
+/dist/
+/build/
+/out/
+
+# Logs and debugging files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+logs/
+log.txt
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.swp
+*.bak
+*~
+*.tmp
+*.tmp.*
+*.sublime-*
+
+# Compiled binary files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Compression and archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Images and media files
+*.bmp
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.svg
+*.tiff
+*.webp
+*.ico
+
+# Dependency directories
+.bower/
+jspm_packages/
+bower_components/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Editor-specific files
+*.sublime-project
+*.sublime-workspace
+*.sage
+.sass-cache/
+.atlas/
+.cache/
+.idea/
+
+# Visual Studio Code specific files
+.vscode/
+
+# macOS specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows thumbnail files
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Thumbnail cache files
+Thumbs.db
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains IDE specific files
+.idea/
+
+# Sublime Text specific files
+.sublime-*
+
+# Node.js runtime and debugging files
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnp.*
+.node-*
+
+# TypeScript
+*.tsbuildinfo
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+
+# ESLint
+.eslintcache
+
+# Next.js
+.next/
+out/
+
+# Compiled output
+dist/
+
+# Backup files
+*.bak
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyInstaller
+__pycache__/
+build/
+dist/
+*.spec
+
+# pyenv
+.python-version
+
+# pipenv
+.Python
+
+# pip-compile
+requirements.txt
