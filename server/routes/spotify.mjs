@@ -7,7 +7,7 @@ const router = express.Router();
 const PORT = process.env.PORT || 3000;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
-const RED_URI = process.env.RED_URI || `http://localhost:${PORT}/redpage`;
+const RED_URI = process.env.RED_URI || `http://192.168.1.91:${PORT}/redpage`;
 
 // This object is going to be used for authentication alone. We make separate SpotifyWebApis for our actual API calls with access tokens.
 import SpotifyWebApi from "spotify-web-api-node";
@@ -148,11 +148,23 @@ router.get("/login", (req, res) => {
     return text;
   };
 
+  if (req.query.userId && req.query.redirect_uri) {
+    // get query information for friend requests / share
+    const senderUserID = req.query.userId;
+    // Get the redirectUri from the request query parameters
+    const redirectUri = req.query.redirect_uri;
+
+    // send them through as cookies
+    res.cookie("next_uri", redirectUri);
+    res.cookie("sender_userID", senderUserID);
+  }
+
   const stateString = generateRandomString(16);
   res.cookie("authState", stateString);
 
   const scopes = ["user-top-read", "user-read-email"];
   const loginLink = spotifyAuthAPI.createAuthorizeURL(scopes, stateString);
+
   res.redirect(loginLink);
 });
 
@@ -161,8 +173,6 @@ router.get("/redpage", (req, res) => {
     // States don't match, send the user away.
     return res.redirect("/");
   }
-
-  res.clearCookie("authState");
 
   const authenticationCode = req.query.code;
   if (authenticationCode) {
@@ -176,8 +186,27 @@ router.get("/redpage", (req, res) => {
       spotifyAuthAPI.setAccessToken(data.body["access_token"]);
       spotifyAuthAPI.setRefreshToken(data.body["refresh_token"]);
 
-      // redirect to the favorites page
-      return res.redirect("http://localhost:3000/faves");
+      // if accesssed with share link, send to a page where you can add friends
+      if (req.cookies.next_uri && req.cookies.sender_userID) {
+        // get cookies from request
+        // used for the sharing/adding friend link
+        const next_uri = req.cookies["next_uri"];
+        const sender_userID = req.cookies["sender_userID"];
+
+        // share link needs to have the user sending the link and
+        // an auth state so that not just anyone can add someone
+        // if they know their username. Re-using the auth state
+        // string created for the spotify api auth
+        const next_uri_with_user = `${next_uri}?sender_userID=${sender_userID}&auth_state=${req.cookies["authState"]}`;
+        res.redirect(next_uri_with_user);
+      } else {
+        // normal login
+        // remove state string and redirect to the favorites page
+
+        res.clearCookie("authState");
+
+        return res.redirect("http://192.168.1.91:3000/faves");
+      }
     });
   }
 });
@@ -211,11 +240,11 @@ router.get("/favorites", accTknRefreshments, async (req, res) => {
 
     const document = await collection.findOne(query);
 
-    // If document exists and was fetched less than 2 weeks ago, return data
+    // If document exists and was fetched less than a week ago, return data
     if (
       document &&
       document.fetch_date &&
-      isMoreThanTwoWeeksAgo(document.fetch_date) === false
+      isMoreThanWeekAgo(document.fetch_date) === false
     ) {
       // Create an array to store the results
       const results = [];
@@ -296,13 +325,13 @@ router.get("/favorites", accTknRefreshments, async (req, res) => {
 });
 
 // Function to check if a date is more than 2 weeks ago
-function isMoreThanTwoWeeksAgo(date) {
+function isMoreThanWeekAgo(date) {
   const twoWeeksAgo = new Date();
-  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 7);
   return date < twoWeeksAgo;
 }
 
-// endpoint to fetch user data
+// endpoint to fetch current users data
 router.get("/user-data", accTknRefreshments, async (req, res) => {
   // Get access token and refresh if needed
   let accessToken;
@@ -359,6 +388,159 @@ router.get("/user-data", accTknRefreshments, async (req, res) => {
   }
 });
 
+// endpoint to fetch specific users data
+router.get("/specific-user-data", accTknRefreshments, async (req, res) => {
+  // Get access token and refresh if needed
+  let accessToken;
+  try {
+    accessToken = setAccessToken(req);
+  } catch (error) {
+    console.log("Error in user-data endpoint: " + error);
+    return res.status(404).send();
+  }
+
+  try {
+    // Reference to the "users" collection in MongoDB
+    let usersCollection = await db.collection("users");
+
+    // get the requested userID
+    const requestedUserID = req.query.userID;
+
+    // Query to check for a document with the same "id"
+    const query = { id: requestedUserID };
+
+    const existingUser = await usersCollection.findOne(query);
+
+    if (existingUser) {
+      // if specific user exists in db return their doc
+      return res.status(200).send(JSON.stringify(existingUser, null, 2));
+    } else {
+      // If the user document doesn't exist
+      const noResult = {
+        message: `${requestedUserID} does not exist in our database`,
+      };
+      return res.status(200).send(JSON.stringify(noResult, null, 2));
+    }
+  } catch (err) {
+    console.error("Error in specific-user-data endpoint:", err);
+    return res.status(500).send("Internal Server Error");
+  }
+});
+
+// endpoint to add friends
+router.get("/complete_friend_request", accTknRefreshments, async (req, res) => {
+  // make sure the user is authenticated
+  // Get access token and refresh if needed
+  let accessToken;
+  try {
+    accessToken = setAccessToken(req);
+  } catch (error) {
+    console.log("Error in complete_friend_request endpoint: " + error);
+    return res.status(404).send();
+  }
+
+  try {
+    // References to Spotify API and MongoDB users collection
+    const spotifyAPI = new SpotifyWebApi({ accessToken: accessToken });
+    const usersCollection = await db.collection("users");
+
+    // Get current user id
+    const currentUserID = (await spotifyAPI.getMe()).body.id;
+
+    // Get sender user id
+    const senderUserID = req.query.sender_userID;
+
+    // Get current user data from db
+    const query = { id: currentUserID };
+    const currentUser = await usersCollection.findOne(query);
+
+    // Get sender user data from db
+    const senderQuery = { id: senderUserID };
+    const senderUser = await usersCollection.findOne(senderQuery);
+
+    // Check if the sender is already a friend of the current user
+    const senderIsFriendOfCurrentUser = currentUser.friends.some(
+      (friend) => friend.id === senderUserID
+    );
+
+    // Check if the current user is already a friend of the sender
+    const currentUserIsFriendOfSender = senderUser.friends.some(
+      (friend) => friend.id === currentUserID
+    );
+
+    if (senderIsFriendOfCurrentUser && currentUserIsFriendOfSender) {
+      console.log("Both users are already friends.");
+      return res.status(200).json({
+        message: "Already friends",
+        currentUserID,
+        senderUserID,
+      });
+    }
+
+    // Update current user's friends list
+    if (!senderIsFriendOfCurrentUser) {
+      currentUser.friends.push({
+        id: senderUser.id,
+        displayName: senderUser.displayName,
+        profileImageUrl: senderUser.profileImageUrl,
+      });
+    }
+
+    // Update sender user's friends list
+    if (!currentUserIsFriendOfSender) {
+      senderUser.friends.push({
+        id: currentUser.id,
+        displayName: currentUser.displayName,
+        profileImageUrl: currentUser.profileImageUrl,
+      });
+    }
+
+    // Update current user's db document with the new friends list
+    const currentResult = await usersCollection.updateOne(
+      { id: currentUserID },
+      {
+        $set: {
+          friends: currentUser.friends,
+        },
+      },
+      { upsert: true }
+    );
+
+    // Update sender user's db document with the new friends list
+    const senderResult = await usersCollection.updateOne(
+      { id: senderUserID },
+      {
+        $set: {
+          friends: senderUser.friends,
+        },
+      },
+      { upsert: true }
+    );
+
+    // Check if both users' friends lists were updated successfully
+    if (
+      (currentResult.modifiedCount === 1 || senderResult.modifiedCount === 1) &&
+      !(currentResult.modifiedCount === 0 && senderResult.modifiedCount === 0)
+    ) {
+      console.log("Both users' friends lists updated successfully.");
+      return res.status(200).json({
+        message: "Friends added successfully",
+        currentUserID,
+        senderUserID,
+      });
+    } else {
+      console.log(
+        "No document matched the query or the document was not modified for one or both users."
+      );
+      return res.status(400).json({ error: "Failed to add friends" });
+    }
+  } catch (err) {
+    console.error("Error updating fields:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// endpoint to generate a share link
 router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   // make sure user is authenticated
   // Get access token and refresh if needed
@@ -377,7 +559,7 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   const userID = userData.body.id;
 
   // Get the redirectUri from the request query parameters
-  const redirectUri = req.query.redirectUri;
+  const redirectUri = req.query.redirect_uri;
 
   // Ensure that the redirectUri is provided
   if (!redirectUri) {
@@ -387,9 +569,12 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   // Construct the share link
   const shareLink = `${
     process.env.CLIENT_URI
-  }/api/spotify/login?userId=${userId}&redirectUri=${encodeURIComponent(
+  }/api/spotify/login?userId=${userID}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;
+
+  // Return the shareLink in the response
+  return res.json({ shareLink });
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/song-card.css";
+import "../styles/card.css";
 
 const SongCard = ({ songName, artistNames, albumCover }) => {
   return (
@@ -18,5 +18,3 @@ const SongCard = ({ songName, artistNames, albumCover }) => {
 };
 
 export default SongCard;
-
-

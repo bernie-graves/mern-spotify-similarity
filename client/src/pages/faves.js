@@ -4,7 +4,7 @@ import SongCard from "../components/song-card";
 import ArtistCard from "../components/artist-card";
 import "../styles/Tab.css"; // Import the CSS file
 import "../styles/scroll-bars.css";
-import "../styles/song-card.css";
+import "../styles/card.css";
 
 function FavesPage() {
   // set up state variables
@@ -39,8 +39,6 @@ function FavesPage() {
       }
 
       const result = await response.json();
-
-      console.log("FAVORITES RESPONSE: " + JSON.stringify(result, null, 2));
 
       const parsedResult = {
         artists_long_term: [],

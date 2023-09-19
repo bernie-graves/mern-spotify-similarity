@@ -1,0 +1,58 @@
+/* Common button styles */
+.friend-button {
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 150px; /* Set a fixed width for both buttons */
+    transition: background-color 0.3s, color 0.3s; /* Add transition effect */
+}
+
+/* Styles for the "Add Friend" button */
+.add-friend-button {
+    background-color: #4caf50; /* Green background color */
+}
+
+/* Hover effect for "Add Friend" button */
+.add-friend-button:hover {
+    background-color: #348838; /* Slightly darker green on hover */
+}
+
+/* Styles for the "Cancel" button */
+.cancel-button {
+    background-color: transparent; /* Transparent background */
+    border: 2px solid #f44336; /* Red border */
+    color: #f44336; /* Red text color */
+}
+
+/* Hover effect for "Cancel" button */
+.cancel-button:hover {
+    background-color: #f44336; /* Red background on hover */
+    color: white; /* White text color on hover */
+}
+
+/* Updated styles for the "Add Friends" button */
+.add-friends-button {
+    background-color: transparent; /* Transparent background */
+    color: #1DB954; /* Spotify green text color */
+    font-size: 32px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    display: flex; /* Center the content vertically and horizontally */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.add-friends-button:hover {
+    color: #168f3a; /* Darker green on hover */
+}
+
+  
+

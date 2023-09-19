@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/song-card.css";
+import "../styles/card.css";
 
 const ArtistCard = ({ artistName, genres, artistImage }) => {
   return (
