@@ -60,6 +60,15 @@ function calculateCosineSimilarity(user1Genres, user2Genres) {
   return similarity;
 }
 
+function combineSimilarities(sim1, sim2, sim3, weight1, weight2, weight3) {
+  const totWeight = weight1 + weight2 + weight3;
+
+  const combinedSimilarity =
+    (weight1 * sim1 + weight2 * sim2 + weight3 * sim3) / totWeight;
+
+  return combinedSimilarity;
+}
+
 async function fetchUser(userID) {
   try {
     let collection = await db.collection("user-favorites");
@@ -194,29 +203,82 @@ router.get("/calculate-similarity", async (req, res) => {
       user2GenresLongTerm
     );
 
-    console.log("Short Term Similarity: " + genreShortSimilarity);
-    console.log("Medium Term Similarity: " + genreMediumSimilarity);
-    console.log("Long Term Similarity: " + genreLongSimilarity);
+    let combinedShortSimilarity = combineSimilarities(
+      songsShortSimilarity,
+      artistsShortSimilarity,
+      genreShortSimilarity,
+      1,
+      2,
+      3
+    );
+
+    let combinedMediumSimilarity = combineSimilarities(
+      songsMediumSimilarity,
+      artistsMediumSimilarity,
+      genreMediumSimilarity,
+      1,
+      2,
+      3
+    );
+
+    let combinedLongSimilarity = combineSimilarities(
+      songsLongSimilarity,
+      artistsLongSimilarity,
+      genreLongSimilarity,
+      1,
+      2,
+      3
+    );
+
+    combinedShortSimilarity = combinedShortSimilarity * 3;
+    combinedMediumSimilarity = combinedMediumSimilarity * 3;
+    combinedLongSimilarity = combinedLongSimilarity * 3;
+
+    let combinedTotalSimilarity = combineSimilarities(
+      combinedShortSimilarity,
+      combinedMediumSimilarity,
+      combinedLongSimilarity,
+      1,
+      2,
+      3
+    );
+
+    if (combinedTotalSimilarity > 1) {
+      combinedTotalSimilarity = 1;
+    }
+
+    if (combinedTotalSimilarity > 1) {
+      combinedTotalSimilarity = 1;
+    }
+
+    if (combinedTotalSimilarity > 1) {
+      combinedTotalSimilarity = 1;
+    }
+
+    if (combinedTotalSimilarity > 1) {
+      combinedTotalSimilarity = 1;
+    }
+
+    console.log("Similarity: " + combinedTotalSimilarity);
+
+    // make scores between 0 and 100
+    const musicMatchScore = Math.floor(combinedTotalSimilarity * 100);
+    const shortTermScore = Math.floor(combinedShortSimilarity * 100);
+    const mediumTermScore = Math.floor(combinedMediumSimilarity * 100);
+    const longTermScore = Math.floor(combinedLongSimilarity * 100);
+
+    const results = {
+      shortTermScore,
+      mediumTermScore,
+      longTermScore,
+      musicMatchScore,
+    };
+
+    res.send(JSON.stringify(results, null, 2));
   } catch (err) {
     console.log("Error fetching user data in similarity endpoint: " + err);
     res.status(404).send();
   }
-
-  // placeholder just return random numbers between 0 and 100
-  // Generate random similarity scores
-  const musicMatchScore = Math.floor(Math.random() * 101);
-  const shortTermScore = Math.floor(Math.random() * 101);
-  const mediumTermScore = Math.floor(Math.random() * 101);
-  const longTermScore = Math.floor(Math.random() * 101);
-
-  const results = {
-    shortTermScore,
-    mediumTermScore,
-    longTermScore,
-    musicMatchScore,
-  };
-
-  res.send(JSON.stringify(results, null, 2));
 });
 
 export default router;
