@@ -25,7 +25,7 @@ function FriendCard({ friendID, displayName, profileImageUrl, onClick }) {
 FriendCard.propTypes = {
   friendID: PropTypes.string.isRequired,
   displayName: PropTypes.string.isRequired,
-  profileImageUrl: PropTypes.string.isRequired,
+  profileImageUrl: PropTypes.string,
   onClick: PropTypes.func.isRequired, // Define onClick as a required function prop
 };
 

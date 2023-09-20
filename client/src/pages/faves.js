@@ -16,7 +16,6 @@ function FavesPage() {
   const [artistData, setArtistData] = useState({
     short_term: null,
     medium_term: null,
-
     long_term: null,
   });
 
