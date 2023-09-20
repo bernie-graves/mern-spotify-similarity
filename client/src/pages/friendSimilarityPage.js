@@ -7,6 +7,8 @@ import {
 } from "../helpers/api";
 
 import SimilarityScoreDisplay from "../components/similarity-score-display";
+import ProfilePicComparison from "../components/profile-pic-comparison";
+import SingleTermSimilarityDisplay from "../components/single-term-similarity";
 
 function FriendsSimilarityPage() {
   const [user1_ID, setUser1_ID] = useState();
@@ -30,6 +32,22 @@ function FriendsSimilarityPage() {
   const [mediumTermScore, setMediumTermScore] = useState(0);
   const [longTermScore, setLongTermScore] = useState(0);
 
+  // shared songs, artists and genres
+  const [sharedItems, setSharedItems] = useState({
+    songsShortTerm: [],
+    songsMediumTerm: [],
+    songsLongTerm: [],
+    artistsShortTerm: [],
+    artistsMediumTerm: [],
+    artistsLongTerm: [],
+    genresShortTerm: {},
+    genresMediumTerm: {},
+    genresLongTerm: {},
+  });
+
+  const [activeTab, setActiveTab] = useState("short_term"); // Initialize with the default tab
+  let content;
+
   useEffect(() => {
     // for all state variables being set here I am also
     // setting a placeholder variable to be used for the
@@ -50,6 +68,7 @@ function FriendsSimilarityPage() {
       try {
         const currentUserData = await fetchUserData();
 
+        // find out which user is the current user
         if (currentUserData.id === user1_ID_temp) {
           setUser1_Name(currentUserData.displayName);
           setUser1_ImageURL(currentUserData.profileImageUrl);
@@ -64,6 +83,11 @@ function FriendsSimilarityPage() {
           console.log("Unauthorized user trying to view similarities.");
         }
 
+        // get both users data
+        const user1Data = await fetchSpecificUserData(user1_ID_temp);
+        const user2Data = await fetchSpecificUserData(user2_ID_temp);
+
+        // if is user 1 check if in each other friends lists and set state vars for user2
         if (isUser1_temp) {
           setUser2InUser1FriendsList(
             await currentUserData.friends.some(
@@ -71,14 +95,17 @@ function FriendsSimilarityPage() {
             )
           );
 
-          const user2Data = await fetchSpecificUserData(user2_ID_temp);
           setUser1InUser2FriendsList(
             await user2Data.friends.some(
               (friend) => friend.id === user1_ID_temp
             )
           );
+
+          setUser2_Name(user2Data.displayName);
+          setUser2_ImageURL(user2Data.profileImageUrl);
         }
 
+        // if is user 2 check if in each other friends lists and set state vars for user1
         if (isUser2_temp) {
           setUser1InUser2FriendsList(
             await currentUserData.friends.some(
@@ -86,12 +113,14 @@ function FriendsSimilarityPage() {
             )
           );
 
-          const user1Data = await fetchSpecificUserData(user1_ID_temp);
           setUser2InUser1FriendsList(
             await user1Data.friends.some(
               (friend) => friend.id === user2_ID_temp
             )
           );
+
+          setUser1_ImageURL(user1Data.profileImageUrl);
+          setUser1_Name(user1Data.displayName);
         }
 
         const similarity_results = await fetchSimilarityData(
@@ -102,6 +131,22 @@ function FriendsSimilarityPage() {
         setMediumTermScore(similarity_results.mediumTermScore);
         setLongTermScore(similarity_results.longTermScore);
         setMusicMatchScore(similarity_results.musicMatchScore);
+
+        setSharedItems({
+          songsShortTerm: similarity_results.sharedSongsShortTerm,
+          songsMediumTerm: similarity_results.sharedSongsMediumTerm,
+          songsLongTerm: similarity_results.sharedSongsLongTerm,
+          artistsShortTerm: similarity_results.sharedArtistsShortTerm,
+          artistsMediumTerm: similarity_results.sharedArtistsMediumTerm,
+          artistsLongTerm: similarity_results.sharedArtistsLongTerm,
+          genresShortTerm: similarity_results.sharedGenresShortTerm,
+          genresMediumTerm: similarity_results.sharedGenresMediumTerm,
+          genresLongTerm: similarity_results.sharedGenresLongTerm,
+        });
+        console.log(
+          "Number of shared artists: " +
+            JSON.stringify(similarity_results.sharedGenresShortTerm, null, 2)
+        );
 
         setLoading(false); // Set loading to false after fetching data
         console.log("USEEFFECT RAN");
@@ -117,17 +162,64 @@ function FriendsSimilarityPage() {
     return <div style={{ color: "whitesmoke" }}>Loading...</div>; // Display loading message
   }
 
+  if (activeTab === "short_term") {
+    content = (
+      <div>
+        <SingleTermSimilarityDisplay
+          score={shortTermScore}
+          songs={sharedItems.songsShortTerm}
+          artists={sharedItems.artistsShortTerm}
+          genres={sharedItems.genresShortTerm}
+          user1={isUser1 ? user1_ID : user2_ID}
+          user2={isUser1 ? user2_ID : user1_ID}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "medium_term") {
+    content = (
+      <div>
+        <SingleTermSimilarityDisplay
+          score={mediumTermScore}
+          songs={sharedItems.songsMediumTerm}
+          artists={sharedItems.artistsMediumTerm}
+          genres={sharedItems.genresMediumTerm}
+          user1={isUser1 ? user1_ID : user2_ID}
+          user2={isUser1 ? user2_ID : user1_ID}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "long_term") {
+    content = (
+      <div>
+        <SingleTermSimilarityDisplay
+          score={longTermScore}
+          songs={sharedItems.songsLongTerm}
+          artists={sharedItems.artistsLongTerm}
+          genres={sharedItems.genresLongTerm}
+          user1={isUser1 ? user1_ID : user2_ID}
+          user2={isUser1 ? user2_ID : user1_ID}
+        />
+      </div>
+    );
+  }
+
   return (
     <div style={{ color: "whitesmoke" }}>
-      {isUser1 || isUser2 ? (
+      {/* {isUser1 || isUser2 ? (
         <h3>
           Hello {isUser1 ? user1_ID : user2_ID}! This is your Music Match page
           with {isUser1 ? user2_ID : user1_ID}
         </h3>
       ) : (
         <div>You are neither of the users supposed to see this page!</div>
-      )}
-      {user1InUser2FriendsList && user2InUser1FriendsList ? (
+      )} */}
+      {user1InUser2FriendsList &&
+      user2InUser1FriendsList &&
+      (isUser1 || isUser2) ? (
         <div>
           <div>
             <div
@@ -135,45 +227,67 @@ function FriendsSimilarityPage() {
                 padding: "50px",
               }}
             >
+              <h1
+                style={{
+                  paddingBottom: "40px",
+                }}
+              >
+                Friend Comparison
+              </h1>
+              <ProfilePicComparison
+                imageUrl1={user1_ImageURL}
+                imageUrl2={user2_ImageURL}
+                user1={user1_ID}
+                user2={user2_ID}
+              />
+
               <SimilarityScoreDisplay
                 score={musicMatchScore}
                 radius={100}
-                strokeWidth={9}
+                strokeWidth={12}
               />
               <h3 style={{ padding: "10px" }}>Music Match Score</h3>
             </div>
+            <div style={{ paddingBottom: "10px" }}>
+              <div className="tabs">
+                {/* Short Term Tab */}
+                <button
+                  className={`tab ${
+                    activeTab === "short_term" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("short_term")}
+                >
+                  Short Term
+                </button>
+
+                {/* Medium Term Tab */}
+                <button
+                  className={`tab ${
+                    activeTab === "medium_term" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("medium_term")}
+                >
+                  Medium Term
+                </button>
+
+                {/* Long Term Tab */}
+                <button
+                  className={`tab ${activeTab === "long_term" ? "active" : ""}`}
+                  onClick={() => setActiveTab("long_term")}
+                >
+                  Long Term
+                </button>
+              </div>
+            </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <div style={{ flex: 1, textAlign: "center" }}>
-                <SimilarityScoreDisplay
-                  score={shortTermScore}
-                  radius={60}
-                  strokeWidth={6}
-                />
-                <h5 style={{ padding: "10px" }}>Short Term</h5>
-              </div>
-              <div style={{ flex: 1, textAlign: "center" }}>
-                <SimilarityScoreDisplay
-                  score={mediumTermScore}
-                  radius={60}
-                  strokeWidth={6}
-                />
-                <h5 style={{ padding: "10px" }}>Medium Term</h5>
-              </div>
-              <div style={{ flex: 1, textAlign: "center" }}>
-                <SimilarityScoreDisplay
-                  score={longTermScore}
-                  radius={60}
-                  strokeWidth={6}
-                />
-                <h5 style={{ padding: "10px" }}>Long Term</h5>
-              </div>
+              {content}
             </div>
           </div>
         </div>
       ) : (
         <div>
-          You guys are not on each other's friends list. Click the share button
-          and share the link with your friend to become friends
+          You are not authorized to see this page. Make sure you are each others
+          friends. Add friends using the share button in the navigation bar.
         </div>
       )}
     </div>

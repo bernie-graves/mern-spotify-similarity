@@ -121,6 +121,53 @@ function parseArtists(artists) {
   return [artistNames, genreCounts];
 }
 
+// function to select same songs
+function findSongsIntersection(arr1, arr2) {
+  // Create a set to store unique song names from the first array
+  const songNamesSet = new Set(arr1.map((obj) => obj.songName));
+
+  // Filter the second array to include only objects whose songName is in the set
+  const intersection = arr2.filter((obj) => songNamesSet.has(obj.songName));
+
+  return intersection;
+}
+
+// function to select same artists
+function findArtistsIntersection(arr1, arr2) {
+  // Create a set to store unique song names from the first array
+  const artistNamesSet = new Set(arr1.map((obj) => obj.artistName));
+
+  // Filter the second array to include only objects whose songName is in the set
+  const intersection = arr2.filter((obj) => artistNamesSet.has(obj.artistName));
+
+  return intersection;
+}
+
+// function to select same genres and the number of times they appear
+function mergeGenreDictionaries(dict1, dict2) {
+  const sharedGenres = [];
+
+  for (const genre in dict1) {
+    if (dict2.hasOwnProperty(genre)) {
+      sharedGenres.push({
+        genre: genre,
+        values: [dict1[genre], dict2[genre]],
+      });
+    }
+  }
+
+  // Sort the sharedGenres array based on dict1 values in descending order
+  sharedGenres.sort((a, b) => b.values[0] - a.values[0]);
+
+  // Create the final dictionary
+  const result = {};
+  for (const entry of sharedGenres) {
+    result[entry.genre] = entry.values;
+  }
+
+  return result;
+}
+
 // Endpoint to calcualte similarity score between users
 // returns short term, medium term, long term and total similarity scores
 router.get("/calculate-similarity", async (req, res) => {
@@ -267,11 +314,62 @@ router.get("/calculate-similarity", async (req, res) => {
     const mediumTermScore = Math.floor(combinedMediumSimilarity * 100);
     const longTermScore = Math.floor(combinedLongSimilarity * 100);
 
+    // select the shared songs from each time frame to return
+    const sharedSongsShortTerm = findSongsIntersection(
+      user1Data.songs_short_term,
+      user2Data.songs_short_term
+    );
+    const sharedSongsMediumTerm = findSongsIntersection(
+      user1Data.songs_medium_term,
+      user2Data.songs_medium_term
+    );
+    const sharedSongsLongTerm = findSongsIntersection(
+      user1Data.songs_long_term,
+      user2Data.songs_long_term
+    );
+
+    // select the shared artists from each time frame
+    const sharedArtistsShortTerm = findArtistsIntersection(
+      user1Data.artists_short_term,
+      user2Data.artists_short_term
+    );
+    const sharedArtistsMediumTerm = findArtistsIntersection(
+      user1Data.artists_medium_term,
+      user2Data.artists_medium_term
+    );
+    const sharedArtistsLongTerm = findArtistsIntersection(
+      user1Data.artists_long_term,
+      user2Data.artists_long_term
+    );
+
+    // select the shared genres and the number of times they appear for each time frame
+    const sharedGenresShortTerm = mergeGenreDictionaries(
+      user1GenresShortTerm,
+      user2GenresShortTerm
+    );
+    const sharedGenresMediumTerm = mergeGenreDictionaries(
+      user1GenresMediumTerm,
+      user2GenresMediumTerm
+    );
+    const sharedGenresLongTerm = mergeGenreDictionaries(
+      user1GenresLongTerm,
+      user2GenresLongTerm
+    );
+
     const results = {
       shortTermScore,
       mediumTermScore,
       longTermScore,
       musicMatchScore,
+      sharedSongsShortTerm,
+      sharedSongsMediumTerm,
+      sharedSongsLongTerm,
+      sharedArtistsShortTerm,
+      sharedArtistsMediumTerm,
+      sharedArtistsLongTerm,
+      sharedGenresShortTerm,
+      sharedGenresMediumTerm,
+      sharedGenresLongTerm,
     };
 
     res.send(JSON.stringify(results, null, 2));
