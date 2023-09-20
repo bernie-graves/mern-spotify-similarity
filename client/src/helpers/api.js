@@ -1,7 +1,7 @@
 // api.js
 
 export async function generateShareLink() {
-  const redirectUri = "http://192.168.1.91:3000/add_friend";
+  const redirectUri = `${process.env.REACT_APP_CLIENT_URI}/add_friend`;
   const url = `/api/spotify/generate-share-link?redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;
