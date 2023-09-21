@@ -78,13 +78,7 @@ const setAccessToken = (req) => {
 };
 
 // Function to fetch top tracks and store in MongoDB
-async function fetchTopTracksAndStore(
-  spotifyAPI,
-  time_frame,
-  count,
-  userID,
-  collection
-) {
+async function fetchTopTracks(spotifyAPI, time_frame, count) {
   try {
     const data = await spotifyAPI.getMyTopTracks({
       limit: count,
@@ -96,6 +90,7 @@ async function fetchTopTracksAndStore(
       songName: item.name,
       artistNames: item.artists.map((artist) => artist.name),
       albumCover: item.album.images[0].url,
+      songID: item.id,
     }));
 
     return results;
@@ -106,13 +101,7 @@ async function fetchTopTracksAndStore(
 }
 
 // Function to fetch top artists and store in MongoDB
-async function fetchTopArtistsAndStore(
-  spotifyAPI,
-  time_frame,
-  count,
-  userID,
-  collection
-) {
+async function fetchTopArtists(spotifyAPI, time_frame, count) {
   try {
     const data = await spotifyAPI.getMyTopArtists({
       limit: count,
@@ -124,6 +113,7 @@ async function fetchTopArtistsAndStore(
       artistName: item.name,
       genres: item.genres,
       artistImage: item.images[0].url,
+      artistID: item.id,
     }));
 
     return results;
@@ -162,7 +152,12 @@ router.get("/login", (req, res) => {
   const stateString = generateRandomString(16);
   res.cookie("authState", stateString);
 
-  const scopes = ["user-top-read", "user-read-email"];
+  const scopes = [
+    "user-top-read",
+    "user-read-email",
+    "playlist-modify-private",
+    "playlist-modify-public",
+  ];
   const loginLink = spotifyAuthAPI.createAuthorizeURL(scopes, stateString);
 
   res.redirect(loginLink);
@@ -276,20 +271,16 @@ router.get("/favorites", accTknRefreshments, async (req, res) => {
       await Promise.all(
         time_frames.map(async (item) => {
           // Fetch top songs for each time frame
-          userFavs[`songs_${item}`] = await fetchTopTracksAndStore(
+          userFavs[`songs_${item}`] = await fetchTopTracks(
             spotifyAPI,
             item,
-            50,
-            userID,
-            collection
+            50
           );
           // Fetch top artists for each time frame
-          userFavs[`artists_${item}`] = await fetchTopArtistsAndStore(
+          userFavs[`artists_${item}`] = await fetchTopArtists(
             spotifyAPI,
             item,
-            15,
-            userID,
-            collection
+            15
           );
         })
       );
@@ -324,7 +315,7 @@ router.get("/favorites", accTknRefreshments, async (req, res) => {
   }
 });
 
-// Function to check if a date is more than 2 weeks ago
+// Function to check if a date is more than a week ago
 function isMoreThanWeekAgo(date) {
   const twoWeeksAgo = new Date();
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 7);
@@ -576,5 +567,167 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   // Return the shareLink in the response
   return res.json({ shareLink });
 });
+
+// endpoint to generate a playlist based on shared interests
+router.post("/generate-playlist", accTknRefreshments, async (req, res) => {
+  // make sure user is authenticated
+  // Get access token and refresh if needed
+  let accessToken;
+  try {
+    accessToken = setAccessToken(req);
+  } catch (error) {
+    console.log("Error in generate-share-link endpoint: " + error);
+    return res.status(404).send();
+  }
+
+  const spotifyAPI = new SpotifyWebApi({ accessToken: accessToken });
+
+  // get shared interests
+  const body = req.body;
+  // shared songs
+  const songs = body.songs;
+
+  // shared artists
+  const artists = body.artists;
+
+  // shared genres
+  const genres = body.genres;
+
+  // users
+  const user1 = body.user1;
+  const user2 = body.user2;
+  const term = body.term;
+
+  // can only have 5 total between songs, artists and genres
+  // prioritze in that order
+  const preparedData = prepareDataForRecommender(songs, artists, genres);
+
+  // make request to spotify recommender endpoint
+  const recommendations = await spotifyAPI.getRecommendations({
+    limit: 50,
+    market: "US",
+    seed_tracks: preparedData.songIds,
+    seed_artists: preparedData.artistIds,
+    seed_genres: preparedData.genreNames,
+  });
+
+  // recommended song objects to return in body for user to view on website
+  const recommendedSongs = recommendations.body.tracks.map((song) => ({
+    songName: song.name,
+    artistNames: song.artists.map((artist) => artist.name),
+    albumCover: song.album.images[0].url,
+    songID: song.id,
+  }));
+
+  // recommended song ids to use to add to playlist
+  const recommendedSongIds = recommendations.body.tracks.map(
+    (song) => `spotify:track:${song.id}`
+  );
+
+  // make playlist
+  spotifyAPI
+    .createPlaylist(`${user1} and ${user2} Shared Tastes - ${term}`, {
+      description: `shared playlist created by Music Match for ${user1} and ${user2} based on shared interests in the ${term}`,
+      public: false,
+    })
+    .then(
+      function (data) {
+        // add to the playlist
+        const playlistId = data.body.id;
+        spotifyAPI.addTracksToPlaylist(playlistId, recommendedSongIds).then(
+          function (data) {
+            console.log("Added tracks to playlist!");
+          },
+          function (err) {
+            console.log(
+              "Something went wrong adding recommended tracks to playlist!",
+              err
+            );
+            return res.status(400).json({
+              message: "Failed to add songs to playlist",
+            });
+          }
+        );
+      },
+      function (err) {
+        console.log("Failed to create playlist :(", err);
+        return res.status(400).json({
+          message: "Failed to create playlist",
+        });
+      }
+    );
+
+  // add recommended songs to the playlist
+
+  return res.status(200).json({
+    message: "Successfully created playlist",
+    playlistSongs: JSON.stringify(recommendedSongs),
+  });
+});
+
+function prepareDataForRecommender(songs, artists, genres) {
+  // Initialize arrays for songIds, artistIds, and genreNames
+  const songIds = [];
+  const artistIds = [];
+  const genreNames = [];
+
+  // Prioritize songs
+  for (let i = 0; i < songs.length && songIds.length < 5; i++) {
+    songIds.push(songs[i].songID);
+  }
+
+  // Fill artistIds if needed
+  for (
+    let i = 0;
+    i < artists.length && artistIds.length + songIds.length < 5;
+    i++
+  ) {
+    artistIds.push(artists[i].artistID);
+  }
+
+  // prioritize genres based on product of standardized scores
+  const prioritizedGenresArr = prioritizeGenres(genres);
+
+  // Fill genreNames if needed
+  for (let i = 0; i < prioritizedGenresArr.length; i++) {
+    if (genreNames.length + songIds.length + artistIds.length >= 5) {
+      break; // Stop if the total length is 5
+    }
+    genreNames.push(prioritizedGenresArr[i]);
+  }
+
+  // Return the prioritized arrays
+  return { songIds, artistIds, genreNames };
+}
+
+function prioritizeGenres(genresData) {
+  // Extract genre names and pairs of numbers
+  const genreNames = Object.keys(genresData);
+  const user1Scores = genreNames.map((genre) => genresData[genre][0]);
+  const user2Scores = genreNames.map((genre) => genresData[genre][1]);
+
+  const products = [];
+
+  // iterate through standardized scores and multiply
+  for (let i = 0; i < user1Scores.length; i++) {
+    products.push(user1Scores[i] * user2Scores[i]);
+  }
+
+  // Create an array of objects with genre names and standardized products
+  const genresWithScores = genreNames.map((genre, index) => ({
+    name: genre,
+    score: products[index],
+  }));
+
+  // Sort genres by their standardized scores in descending order
+  genresWithScores.sort((a, b) => b.score - a.score);
+
+  // Return an array of genre names in the sorted order
+  const prioritizedGenres = genresWithScores.map(
+    (genreWithScore) => genreWithScore.name
+  );
+
+  return prioritizedGenres;
+}
 
 export default router;

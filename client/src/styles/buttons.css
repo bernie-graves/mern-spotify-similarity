@@ -7,13 +7,13 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
-    width: 150px; /* Set a fixed width for both buttons */
+    width: 150px; 
     transition: background-color 0.3s, color 0.3s; /* Add transition effect */
 }
 
 /* Styles for the "Add Friend" button */
 .add-friend-button {
-    background-color: #4caf50; /* Green background color */
+    background-color:  #1DB954; /* Spotify Green */
 }
 
 /* Hover effect for "Add Friend" button */
@@ -23,9 +23,9 @@
 
 /* Styles for the "Cancel" button */
 .cancel-button {
-    background-color: transparent; /* Transparent background */
-    border: 2px solid #f44336; /* Red border */
-    color: #f44336; /* Red text color */
+    background-color: transparent;
+    border: 2px solid #f44336; 
+    color: #f44336; 
 }
 
 /* Hover effect for "Cancel" button */
@@ -36,7 +36,7 @@
 
 /* Updated styles for the "Add Friends" button */
 .add-friends-button {
-    background-color: transparent; /* Transparent background */
+    background-color: transparent; 
     color: #1DB954; /* Spotify green text color */
     font-size: 32px;
     border: none;
@@ -44,15 +44,41 @@
     cursor: pointer;
     height: 30px;
     width: 30px;
-    display: flex; /* Center the content vertically and horizontally */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
     transition: color 0.3s ease; /* Smooth color transition */
 }
 
 .add-friends-button:hover {
     color: #168f3a; /* Darker green on hover */
 }
+
+.circular-button {
+    width: 150px; 
+    height: 150px; 
+    background-color: #1DB954; /* Spotify Green */
+    border: none;
+    border-radius: 50%; 
+    color: white; 
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  
+    /* Add a hover effect */
+    &:hover {
+      background-color: #168f3a;
+      transform: scale(1.05); 
+      box-shadow: 0px 9px 15px rgba(255, 255, 255, 0.387); /* Add a subtle shadow on hover */
+    }
+  }
 
   
 

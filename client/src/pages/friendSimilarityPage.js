@@ -143,13 +143,8 @@ function FriendsSimilarityPage() {
           genresMediumTerm: similarity_results.sharedGenresMediumTerm,
           genresLongTerm: similarity_results.sharedGenresLongTerm,
         });
-        console.log(
-          "Number of shared artists: " +
-            JSON.stringify(similarity_results.sharedGenresShortTerm, null, 2)
-        );
 
         setLoading(false); // Set loading to false after fetching data
-        console.log("USEEFFECT RAN");
       } catch (error) {
         console.error("Error fetching current user data:", error);
       }
@@ -172,6 +167,7 @@ function FriendsSimilarityPage() {
           genres={sharedItems.genresShortTerm}
           user1={isUser1 ? user1_ID : user2_ID}
           user2={isUser1 ? user2_ID : user1_ID}
+          term={"Short Term"}
         />
       </div>
     );
@@ -187,6 +183,7 @@ function FriendsSimilarityPage() {
           genres={sharedItems.genresMediumTerm}
           user1={isUser1 ? user1_ID : user2_ID}
           user2={isUser1 ? user2_ID : user1_ID}
+          term={"Medium Term"}
         />
       </div>
     );
@@ -202,6 +199,7 @@ function FriendsSimilarityPage() {
           genres={sharedItems.genresLongTerm}
           user1={isUser1 ? user1_ID : user2_ID}
           user2={isUser1 ? user2_ID : user1_ID}
+          term={"Long Term"}
         />
       </div>
     );
