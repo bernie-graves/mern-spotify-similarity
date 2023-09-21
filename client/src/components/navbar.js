@@ -65,11 +65,19 @@ function MyNavbar() {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">Spotify Music Match</Navbar.Brand>
+        <Navbar.Brand href="/">Music Match</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className="justify-content-end">
-          {hasRefTknCookie && <Nav.Link href="/friends">Friends</Nav.Link>}
-          {hasRefTknCookie && <Nav.Link href="/faves">My Favorites</Nav.Link>}
+          {hasRefTknCookie && (
+            <Nav.Link href="/friends" className="ml-lg-2 mr-lg-2">
+              Friends
+            </Nav.Link>
+          )}
+          {hasRefTknCookie && (
+            <Nav.Link href="/faves" className="ml-lg-2 mr-lg-2">
+              Favorites
+            </Nav.Link>
+          )}
           {hasRefTknCookie && (
             <div>
               {/* Use the Button component and the share icon */}

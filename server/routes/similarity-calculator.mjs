@@ -255,8 +255,8 @@ router.get("/calculate-similarity", async (req, res) => {
       artistsShortSimilarity,
       genreShortSimilarity,
       1,
-      2,
-      3
+      1,
+      1
     );
 
     let combinedMediumSimilarity = combineSimilarities(
@@ -264,8 +264,8 @@ router.get("/calculate-similarity", async (req, res) => {
       artistsMediumSimilarity,
       genreMediumSimilarity,
       1,
-      2,
-      3
+      1,
+      1
     );
 
     let combinedLongSimilarity = combineSimilarities(
@@ -273,8 +273,8 @@ router.get("/calculate-similarity", async (req, res) => {
       artistsLongSimilarity,
       genreLongSimilarity,
       1,
-      2,
-      3
+      1,
+      1
     );
 
     combinedShortSimilarity = combinedShortSimilarity * 3;
