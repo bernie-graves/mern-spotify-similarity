@@ -5,6 +5,8 @@ module.exports = function (app) {
     "/api/**",
     createProxyMiddleware({
       target: `${process.env.REACT_APP_BACKEND_URI}`,
+      secure: true,
+      changeOrigin: true,
     })
   );
 };
