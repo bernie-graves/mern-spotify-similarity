@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 5050;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
 const RED_URI =
-  process.env.RED_URI ||
   `${process.env.RENDER_EXTERNAL_URL}/api/spotify/redpage` ||
   `http://192.168.1.91:5050/api/spotify/redpage`;
 
@@ -203,7 +202,7 @@ router.get("/redpage", (req, res) => {
 
         res.clearCookie("authState");
 
-        return res.redirect("http://192.168.1.91:3000/faves");
+        return res.redirect("http://192.168.1.91:3000/");
       }
     });
   }
