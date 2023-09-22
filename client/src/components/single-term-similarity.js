@@ -4,7 +4,6 @@ import SongCard from "./song-card";
 import ArtistCard from "./artist-card";
 import GenreTable from "./genre-table";
 import EmptyCard from "./empty-card";
-// import SpotifyLogo from "../images/spotify-logo.png";
 import "../styles/SingleTermSimilarityDisplay.css";
 import "../styles/buttons.css";
 import "../styles/modals.css";
@@ -192,7 +191,7 @@ const SingleTermSimilarityDisplay = ({
           <span>Generate Playlist</span>
           <img
             style={{ width: "4.5vh", height: "4.5vh" }}
-            src={"/images/spotify-logo.png"}
+            src={"/static/images/spotify-logo.png"}
             alt="Spotify Logo"
           />
         </button>

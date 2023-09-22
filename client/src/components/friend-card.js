@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import ProfilePlaceholder from "/images/profile-placeholder.png";
 
 import "../styles/card.css"; // You can create a separate CSS file for styling
 
@@ -13,7 +12,10 @@ function FriendCard({ friendID, displayName, profileImageUrl, onClick }) {
       </div>
       <div className="profile-image">
         {profileImageUrl === null ? (
-          <img src={"/images/profile-placeholder.png"} alt={displayName} />
+          <img
+            src={"/static/images/profile-placeholder.png"}
+            alt={displayName}
+          />
         ) : (
           <img src={profileImageUrl} alt={displayName} />
         )}

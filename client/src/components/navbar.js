@@ -5,8 +5,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button"; // Import Button component
 import Modal from "react-bootstrap/Modal"; // Import Modal component
 import Cookies from "js-cookie";
-// import SpotifyLogo from "/images/spotify-logo.png";
-// import ProfilePlaceholder from "/images/profile-placeholder.png";
 import "../styles/profile-picture.css";
 import "../styles/modals.css";
 
@@ -105,7 +103,7 @@ function MyNavbar() {
             />
           ) : hasRefTknCookie ? (
             <img
-              src={"/images/profile-placeholder.png"}
+              src={"/static/images/profile-placeholder.png"}
               className="profile-picture"
               alt="Profile"
             />
@@ -125,7 +123,7 @@ function MyNavbar() {
             Connect{" "}
             <img
               style={{ width: "3.5vh", height: "3.5vh" }}
-              src={"/images/spotify-logo.png"}
+              src={"/static/images/spotify-logo.png"}
               alt="Spotify Logo"
             />
           </a>
