@@ -4,13 +4,13 @@ import db from "../db/conn.mjs";
 const router = express.Router();
 
 // add API routes to access spotify API here
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5050;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
 const RED_URI =
   process.env.RED_URI ||
   `${process.env.VERCEL_URL}/api/spotify/redpage` ||
-  `http://192.168.1.91:${PORT}/redpage`;
+  `http://192.168.1.91:5050/api/spotify/redpage`;
 
 // This object is going to be used for authentication alone. We make separate SpotifyWebApis for our actual API calls with access tokens.
 import SpotifyWebApi from "spotify-web-api-node";
