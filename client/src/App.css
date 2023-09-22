@@ -22,3 +22,10 @@ html {
 }
 
 
+@media (max-width: 768px) {
+  .app-content {
+    width: 90%;
+    margin: auto;
+  }
+}
+

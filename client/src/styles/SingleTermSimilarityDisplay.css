@@ -12,6 +12,7 @@
   .right-panel {
     flex: 2;
     padding-left: 20px; /* Add padding for spacing */
+    width: 100%;
   }
   
   .label {
@@ -25,4 +26,23 @@
     margin: auto;
     height: 400px;
   }
+
+  /* Media query for mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* Stack panels vertically on mobile */
+  }
+
+  .left-panel {
+    width: 100%;
+    display: flex; /* Display items next to each other on mobile */
+    justify-content: space-evenly; /* Space items horizontally */
+    align-items: center;
+    
+  }
+
+  .right-panel{
+    padding-left: 0;
+  }
+}
   

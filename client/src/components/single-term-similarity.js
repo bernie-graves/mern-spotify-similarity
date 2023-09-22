@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SimilarityScoreDisplay from "./similarity-score-display";
 import SongCard from "./song-card";
 import ArtistCard from "./artist-card";
@@ -11,7 +11,6 @@ import "../styles/modals.css";
 
 // bootstrap components
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 
 const SingleTermSimilarityDisplay = ({
@@ -30,36 +29,29 @@ const SingleTermSimilarityDisplay = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [playlistSongs, setPlaylistSongs] = useState([
-    {
-      songName: "I See Fire",
-      artistNames: ["Ed Sheeran"],
-      albumCover:
-        "https://i.scdn.co/image/ab67616d0000b27381ef6477bfe32dc55845ef27",
-      songID: "1fu5IQSRgPxJL2OTP7FVLW",
-    },
-    {
-      songName: "Jesus, Take the Wheel",
-      artistNames: ["Carrie Underwood"],
-      albumCover:
-        "https://i.scdn.co/image/ab67616d0000b273724bd326692d222c5906b0b0",
-      songID: "3lec3CzDPAxsZokPph5w87",
-    },
-    {
-      songName: "All On Me",
-      artistNames: ["Devin Dawson"],
-      albumCover:
-        "https://i.scdn.co/image/ab67616d0000b273b1261197f41e760583df46bb",
-      songID: "2mfahQ0EaaZWq4cFNg6A1o",
-    },
-    {
-      songName: "Honky Tonk Man",
-      artistNames: ["Dwight Yoakam"],
-      albumCover:
-        "https://i.scdn.co/image/ab67616d0000b27311725f6fc4f26efec0914c5f",
-      songID: "60Vbhlv3GUL8fNt3LLZ1nH",
-    },
-  ]);
+  const [radius, setRadius] = useState(75); // Default radius for desktop
+
+  useEffect(() => {
+    // Check the screen width and set the radius accordingly
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setRadius(50); // Set a smaller radius for mobile
+      } else {
+        setRadius(75); // Set the default radius for desktop
+      }
+    };
+
+    // Add a listener to window resize events
+    window.addEventListener("resize", handleResize);
+
+    // Call handleResize initially to set the correct radius on component mount
+    handleResize();
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const sendGeneratePlaylistRequest = async () => {
     try {
@@ -86,8 +78,7 @@ const SingleTermSimilarityDisplay = ({
 
       if (response.ok) {
         // Request was successful
-        const result = await response.json();
-        setPlaylistSongs((prev_state) => [...prev_state, result.playlistSongs]);
+        // const result = await response.json();
         setSuccess(true);
       } else {
         // Request failed
@@ -187,27 +178,24 @@ const SingleTermSimilarityDisplay = ({
       </Modal>
       <div className="left-panel">
         <div className="similarity-score">
-          <h4
-            style={{
-              paddingBottom: "10px",
-            }}
-          >
-            Score
-          </h4>
-          <SimilarityScoreDisplay score={score} radius={75} strokeWidth={10} />
-
-          <button
-            className="circular-button"
-            onClick={sendGeneratePlaylistRequest}
-          >
-            <span>Generate Playlist</span>
-            <img
-              style={{ width: "4.5vh", height: "4.5vh" }}
-              src={SpotifyLogo}
-              alt="Spotify Logo"
-            />
-          </button>
+          <SimilarityScoreDisplay
+            score={score}
+            radius={radius}
+            strokeWidth={10}
+          />
         </div>
+
+        <button
+          className="circular-button"
+          onClick={sendGeneratePlaylistRequest}
+        >
+          <span>Generate Playlist</span>
+          <img
+            style={{ width: "4.5vh", height: "4.5vh" }}
+            src={SpotifyLogo}
+            alt="Spotify Logo"
+          />
+        </button>
       </div>
       <div className="right-panel">
         <div className="label">Shared Tastes</div>

@@ -12,12 +12,9 @@ import SingleTermSimilarityDisplay from "../components/single-term-similarity";
 
 function FriendsSimilarityPage() {
   const [user1_ID, setUser1_ID] = useState();
-  const [user1_Name, setUser1_Name] = useState();
   const [user1_ImageURL, setUser1_ImageURL] = useState();
   const [user2_ID, setUser2_ID] = useState();
-  const [user2_Name, setUser2_Name] = useState();
   const [user2_ImageURL, setUser2_ImageURL] = useState();
-  const [authState, setAuthState] = useState();
   const [isUser1, setIsUser1] = useState();
   const [isUser2, setIsUser2] = useState();
   const [user2InUser1FriendsList, setUser2InUser1FriendsList] = useState();
@@ -70,12 +67,10 @@ function FriendsSimilarityPage() {
 
         // find out which user is the current user
         if (currentUserData.id === user1_ID_temp) {
-          setUser1_Name(currentUserData.displayName);
           setUser1_ImageURL(currentUserData.profileImageUrl);
           setIsUser1(true);
           isUser1_temp = true;
         } else if (currentUserData.id === user2_ID_temp) {
-          setUser2_Name(currentUserData.displayName);
           setUser2_ImageURL(currentUserData.profileImageUrl);
           setIsUser2(true);
           isUser2_temp = true;
@@ -101,7 +96,6 @@ function FriendsSimilarityPage() {
             )
           );
 
-          setUser2_Name(user2Data.displayName);
           setUser2_ImageURL(user2Data.profileImageUrl);
         }
 
@@ -120,7 +114,6 @@ function FriendsSimilarityPage() {
           );
 
           setUser1_ImageURL(user1Data.profileImageUrl);
-          setUser1_Name(user1Data.displayName);
         }
 
         const similarity_results = await fetchSimilarityData(
@@ -277,9 +270,7 @@ function FriendsSimilarityPage() {
                 </button>
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              {content}
-            </div>
+            <div>{content}</div>
           </div>
         </div>
       ) : (

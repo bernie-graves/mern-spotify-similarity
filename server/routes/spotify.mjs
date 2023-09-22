@@ -7,7 +7,10 @@ const router = express.Router();
 const PORT = process.env.PORT || 3000;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
-const RED_URI = process.env.RED_URI || `http://192.168.1.91:${PORT}/redpage`;
+const RED_URI =
+  process.env.RED_URI ||
+  `${process.env.VERCEL_URL}/api/spotify/redpage` ||
+  `http://192.168.1.91:${PORT}/redpage`;
 
 // This object is going to be used for authentication alone. We make separate SpotifyWebApis for our actual API calls with access tokens.
 import SpotifyWebApi from "spotify-web-api-node";
