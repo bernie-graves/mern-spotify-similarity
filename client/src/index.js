@@ -5,37 +5,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/home";
-import FavesPage from "./pages/faves";
-import SharePage from "./pages/sharePage";
-import FriendsPage from "./pages/friendsPage";
-import AddFriendsPage from "./pages/addFriendPage";
-import FriendsSimilarityPage from "./pages/friendSimilarityPage";
-import MyNavbar from "./components/navbar";
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <div className="App">
-      <MyNavbar />
-      <div className="app-content">
-        <App />
-        <Router>
-          <Routes>
-            <Route path="/" Component={HomePage} />
-            <Route path="/faves" Component={FavesPage} />
-            <Route path="/friends" Component={FriendsPage} />
-            <Route path="/share" Component={SharePage} />
-            <Route path="/add_friend" Component={AddFriendsPage} />
-            <Route
-              path="/friend_similarity"
-              Component={FriendsSimilarityPage}
-            />
-          </Routes>
-        </Router>
-      </div>
-    </div>
+    <App />
   </React.StrictMode>
 );
 
