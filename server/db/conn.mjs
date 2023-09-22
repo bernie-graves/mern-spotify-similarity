@@ -5,6 +5,8 @@ const connectionString = process.env.ATLAS_URI || "";
 
 const client = new MongoClient(connectionString);
 
+console.log("Connection String: " + connectionString);
+
 let conn;
 try {
   conn = await client.connect();
