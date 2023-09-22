@@ -11,7 +11,10 @@ const PORT = process.env.PORT || 5050;
 const app = express();
 
 const corsOptions = {
-  origin: "http://192.168.1.91:3000",
+  origin: [
+    "http://192.168.1.91:3000",
+    "https://soundmates-for-spotify-frontend.onrender.com",
+  ],
   credentials: true, // Allow credentials (cookies, headers) to be sent with the request
 };
 
