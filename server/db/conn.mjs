@@ -3,9 +3,8 @@ import { MongoClient } from "mongodb";
 // from .env file
 const connectionString = process.env.ATLAS_URI || "";
 
-const client = new MongoClient(connectionString);
-
 console.log("Connection String: " + connectionString);
+const client = new MongoClient(connectionString);
 
 let conn;
 try {
