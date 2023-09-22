@@ -206,7 +206,7 @@ router.get("/redpage", (req, res) => {
 
         res.clearCookie("authState");
 
-        return res.redirect(`${process.env.REACT_APP_CLIENT_URI}/faves`);
+        return res.redirect(`${process.env.REACT_APP_CLIENT_URI}/`);
       }
     });
   }
