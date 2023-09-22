@@ -4,7 +4,13 @@ import { MongoClient } from "mongodb";
 const connectionString = process.env.ATLAS_URI || "";
 
 console.log("Connection String: " + connectionString);
-const client = new MongoClient(connectionString);
+const client = new MongoClient(connectionString, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
 
 let conn;
 try {
