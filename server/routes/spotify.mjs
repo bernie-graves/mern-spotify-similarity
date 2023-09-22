@@ -177,6 +177,7 @@ router.get("/redpage", (req, res) => {
   const authenticationCode = req.query.code;
   if (authenticationCode) {
     spotifyAuthAPI.authorizationCodeGrant(authenticationCode).then((data) => {
+      console.log("ACCESS TOKEN: " + data.body["access_token"]);
       res.cookie("accTkn", data.body["access_token"], {
         maxAge: data.body["expires_in"] * 1000,
       });
