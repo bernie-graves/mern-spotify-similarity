@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 5050;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
 const RED_URI =
+  process.env.RED_URI ||
   `${process.env.RENDER_EXTERNAL_URL}/api/spotify/redpage` ||
   `http://192.168.1.91:5050/api/spotify/redpage`;
 
@@ -51,7 +52,7 @@ const accTknRefreshments = (req, res, next) => {
 
         resolve();
       } else {
-        console.log("no refresh or access token -- please login");
+        console.log("SENT FROM accTknRefreshments middleware");
         return res.send();
       }
     } catch (error) {
@@ -129,7 +130,6 @@ async function fetchTopArtists(spotifyAPI, time_frame, count) {
 
 // login to spotify
 router.get("/login", (req, res) => {
-  console.log("LOGIN ENDPOINT HIT");
   const generateRandomString = (length) => {
     let text = "";
     let possible =
@@ -167,8 +167,6 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/redpage", (req, res) => {
-  console.log("REDIRECT ENDPOINT HIT");
-
   if (req.query.state !== req.cookies["authState"]) {
     // States don't match, send the user away.
     return res.redirect("/");
@@ -177,7 +175,7 @@ router.get("/redpage", (req, res) => {
   const authenticationCode = req.query.code;
   if (authenticationCode) {
     spotifyAuthAPI.authorizationCodeGrant(authenticationCode).then((data) => {
-      console.log("ACCESS TOKEN: " + data.body["access_token"]);
+      console.log("access token: " + data.body["access_token"]);
       res.cookie("accTkn", data.body["access_token"], {
         maxAge: data.body["expires_in"] * 1000,
       });
@@ -206,7 +204,7 @@ router.get("/redpage", (req, res) => {
 
         res.clearCookie("authState");
 
-        return res.redirect("http://192.168.1.91:3000/");
+        return res.redirect("http://192.168.1.91:3000/faves");
       }
     });
   }
@@ -371,12 +369,13 @@ router.get("/user-data", accTknRefreshments, async (req, res) => {
     if (existingUser) {
       // If the user document exists, return it with an added "friends" key
       userResult.friends = existingUser.friends;
+      res.setHeader("Content-Type", "application/json");
       return res.status(200).send(JSON.stringify(userResult, null, 2));
     } else {
       // If the user document doesn't exist, insert a new one with an empty "friends" array
       userResult.friends = [];
       await usersCollection.insertOne(userResult);
-
+      res.setHeader("Content-Type", "application/json");
       return res.status(200).send(JSON.stringify(userResult, null, 2));
     }
   } catch (err) {

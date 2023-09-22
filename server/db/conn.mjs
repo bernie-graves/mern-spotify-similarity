@@ -3,7 +3,6 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 // from .env file
 const connectionString = process.env.ATLAS_URI || "";
 
-console.log("Connection String: " + connectionString);
 const client = new MongoClient(connectionString, {
   serverApi: {
     version: ServerApiVersion.v1,

@@ -29,7 +29,13 @@ function FavesPage() {
     setLoading(true); // Set loading to true when starting the request
 
     try {
-      const response = await fetch(`/api/spotify/favorites`);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/api/spotify/favorites`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(

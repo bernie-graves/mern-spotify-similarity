@@ -10,20 +10,12 @@ import similarity_routes from "./routes/similarity-calculator.mjs";
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-// Allow requests from your frontend, e.g., http://localhost:3000
-const allowedOrigins = ["http://localhost:3000", "http://192.168.1.91:3000"];
-// Use the cors middleware with the allowedOrigins option
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
+const corsOptions = {
+  origin: "http://192.168.1.91:3000",
+  credentials: true, // Allow credentials (cookies, headers) to be sent with the request
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
