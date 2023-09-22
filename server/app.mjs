@@ -37,10 +37,7 @@ app.use("/api/spotify/", spotify_routes);
 app.use("/api/similarity", similarity_routes);
 
 // start the Express server
-if (typeof process.env.VERCEL_URL === "undefined") {
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server is running on port: ${PORT}`);
-  });
-}
-
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port: ${PORT}`);
+});
 module.exports = app;
