@@ -4,7 +4,7 @@ export async function generateShareLink() {
   const redirectUri = `${
     process.env.REACT_APP_CLIENT_URI
       ? process.env.REACT_APP_CLIENT_URI
-      : process.env.VERCEL_URL
+      : process.env.RENDER_EXTERNAL_URL
   }/add_friend`;
   const url = `${
     process.env.REACT_APP_BACKEND_URI
