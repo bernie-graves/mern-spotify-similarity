@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 // from .env file
 const connectionString = process.env.ATLAS_URI || "";
