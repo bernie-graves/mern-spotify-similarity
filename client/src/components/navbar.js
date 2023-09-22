@@ -65,7 +65,7 @@ function MyNavbar() {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">Music Match</Navbar.Brand>
+        <Navbar.Brand href="/">Soundmates for Spotify</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className="justify-content-end">
           {hasRefTknCookie && (

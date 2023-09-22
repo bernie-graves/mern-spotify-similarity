@@ -1,5 +1,4 @@
 .song-card {
-    width: 500px; /* Fixed width for the song card */
     background-color: #333; /* Dark grey background */
     color: white; /* White text color */
     display: flex;
@@ -131,3 +130,15 @@
   flex-grow: 1; /* Makes the line span the width of the container */
   margin-top: 0px; /* Adjust the margin as needed */
 }
+
+
+  /* Responsive styles for mobile */
+  @media (max-width: 768px) {
+
+    .song-card {
+      width: 100%; /* Fixed width for the song card */
+    }
+
+  
+  }
+   

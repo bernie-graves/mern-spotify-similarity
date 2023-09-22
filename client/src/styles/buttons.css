@@ -80,5 +80,21 @@
     }
   }
 
+/* Media query for smaller button on mobile */
+@media (max-width: 768px) {
+    .circular-button {
+      width: 100px; /* Adjust width for mobile */
+      height: 100px; /* Adjust height for mobile */
+      font-size: 16px; /* Adjust font size for mobile */
+      margin: 5px; /* Adjust margin for mobile */
+    }
+    
+    /* Adjust hover styles for mobile */
+    .circular-button:hover {
+      background-color: #168f3a;
+      transform: scale(1.05);
+      box-shadow: 0px 9px 15px rgba(255, 255, 255, 0.387);
+    }
+  }
   
 

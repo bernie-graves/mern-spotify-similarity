@@ -23,3 +23,10 @@
     padding-right: 25px;
   }
 
+  .profile-picture-large {
+    width: 250px; /* Adjust the width as needed */
+    height: 250px; /* Adjust the height as needed */
+    border-radius: 50%;
+  }
+
+

@@ -1,7 +1,11 @@
 // api.js
 
 export async function generateShareLink() {
-  const redirectUri = `${process.env.REACT_APP_CLIENT_URI}/add_friend`;
+  const redirectUri = `${
+    process.env.REACT_APP_CLIENT_URI
+      ? process.env.REACT_APP_CLIENT_URI
+      : process.env.VERCEL_URL
+  }/add_friend`;
   const url = `/api/spotify/generate-share-link?redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;

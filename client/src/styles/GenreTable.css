@@ -1,6 +1,13 @@
 .table-container {
-    width: 500px; /* Adjust the desired maximum width */
-    max-height: 400px; /* Adjust the desired maximum height */
+    width: auto;
+    max-height: 400px; 
     overflow: auto; /* Add scrollbars when content overflows */
     padding: 10px;
+  }
+
+  @media (max-width: 768px) {
+    
+    .table-container{
+      width: auto;
+    }
   }

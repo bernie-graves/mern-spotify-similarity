@@ -5,16 +5,28 @@
       color: #fff; /* Light text color */
     }
   
-    .modal-header {
-      border-bottom: none; /* Remove border under header */
-    }
-  
-    .modal-body {
-      /* Customize body styles as needed */
-    }
-  
-    .modal-footer {
-      /* Customize footer styles as needed */
-    }
   }
+  
+/* Adjust modal styles for mobile */
+@media (max-width: 768px) {
+  .dark-theme-modal {
+    width: 90%; /* Reduce modal width on mobile */
+    margin: auto;
+    padding: auto;
+  }
+}
+
+/* Center the modal content vertically and horizontally */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center the modal title text */
+.modal-title {
+  text-align: center;
+}
+
   
