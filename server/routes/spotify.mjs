@@ -206,7 +206,7 @@ router.get("/redpage", (req, res) => {
 
         res.clearCookie("authState");
 
-        return res.redirect("http://192.168.1.91:3000/faves");
+        return res.redirect(`${process.env.REACT_APP_CLIENT_URI}/faves`);
       }
     });
   }
