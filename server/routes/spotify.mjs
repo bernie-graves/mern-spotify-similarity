@@ -129,6 +129,7 @@ async function fetchTopArtists(spotifyAPI, time_frame, count) {
 
 // login to spotify
 router.get("/login", (req, res) => {
+  console.log("LOGIN ENDPOINT HIT");
   const generateRandomString = (length) => {
     let text = "";
     let possible =
@@ -166,6 +167,8 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/redpage", (req, res) => {
+  console.log("REDIRECT ENDPOINT HIT");
+
   if (req.query.state !== req.cookies["authState"]) {
     // States don't match, send the user away.
     return res.redirect("/");

@@ -113,11 +113,14 @@ function MyNavbar() {
         </Nav>
         {!hasRefTknCookie && (
           <a
-            href="/api/spotify/login"
+            href=""
             className="btn btn-primary"
             style={{
               backgroundColor: "black",
               border: "1px solid #1DB954",
+            }}
+            onClick={() => {
+              window.location.href = `${process.env.REACT_APP_BACKEND_URI}/api/spotify/login`;
             }}
           >
             Connect{" "}
