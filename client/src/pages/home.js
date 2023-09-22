@@ -1,6 +1,4 @@
 import React from "react";
-// import spotifyLogo from "../images/spotify-logo.png";
-// import musicIcon from "../images/music-icon.png";
 
 function HomePage() {
   return (
@@ -13,12 +11,12 @@ function HomePage() {
       </p>
       <div>
         <img
-          src={"/images/spotify-logo.png"}
+          src={"/static/images/spotify-logo.png"}
           alt="Spotify Logo"
           style={{ width: "100px", height: "100px" }}
         />
         <img
-          src={"/images/music-icon.png"}
+          src={"/static/images/music-icon.png"}
           alt="Music Icon"
           style={{ width: "100px", height: "100px", margin: "0 20px" }}
         />

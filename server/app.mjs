@@ -11,7 +11,11 @@ const PORT = process.env.PORT || 5050;
 const app = express();
 
 // Allow requests from your frontend, e.g., http://localhost:3000
-const allowedOrigins = ["http://localhost:3000", "http://192.168.1.91:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://192.168.1.91:3000",
+  "https://soundmates-for-spotify-frontend.vercel.app/",
+];
 // Use the cors middleware with the allowedOrigins option
 app.use(
   cors({
@@ -33,6 +37,10 @@ app.use("/api/spotify/", spotify_routes);
 app.use("/api/similarity", similarity_routes);
 
 // start the Express server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is running on port: ${PORT}`);
-});
+if (typeof process.env.VERCEL_URL === "undefined") {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is running on port: ${PORT}`);
+  });
+}
+
+module.exports = app;
