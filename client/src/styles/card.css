@@ -43,17 +43,6 @@
   }
 
 
-  .profile-picture {
-    width: 100px; /* Adjust the width as needed */
-    height: 100px; /* Adjust the height as needed */
-    border-radius: 50%;
-  }
-
-  .profile-picture-large {
-    width: 250px; /* Adjust the width as needed */
-    height: 250px; /* Adjust the height as needed */
-    border-radius: 50%;
-  }
 
   /* FriendCard.css */
   .friend-card {

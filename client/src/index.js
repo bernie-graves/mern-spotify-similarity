@@ -12,22 +12,30 @@ import SharePage from "./pages/sharePage";
 import FriendsPage from "./pages/friendsPage";
 import AddFriendsPage from "./pages/addFriendPage";
 import FriendsSimilarityPage from "./pages/friendSimilarityPage";
+import MyNavbar from "./components/navbar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
-    <Router>
-      <Routes>
-        {/* Define routes here */}
-        <Route path="/" Component={HomePage} />
-        <Route path="/faves" Component={FavesPage} />
-        <Route path="/friends" Component={FriendsPage} />
-        <Route path="/share" Component={SharePage} />
-        <Route path="/add_friend" Component={AddFriendsPage} />
-        <Route path="/friend_similarity" Component={FriendsSimilarityPage} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <MyNavbar />
+      <div className="app-content">
+        <App />
+        <Router>
+          <Routes>
+            <Route path="/" Component={HomePage} />
+            <Route path="/faves" Component={FavesPage} />
+            <Route path="/friends" Component={FriendsPage} />
+            <Route path="/share" Component={SharePage} />
+            <Route path="/add_friend" Component={AddFriendsPage} />
+            <Route
+              path="/friend_similarity"
+              Component={FriendsSimilarityPage}
+            />
+          </Routes>
+        </Router>
+      </div>
+    </div>
   </React.StrictMode>
 );
 

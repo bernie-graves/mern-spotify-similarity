@@ -7,7 +7,14 @@
 .profile-picture-medium {
     width: 10vh;
     height: 10vh;
+    
     border-radius: 50%;
+}
+
+.profile-picture-large {
+  width: 250px; /* Adjust the width as needed */
+  height: 250px; /* Adjust the height as needed */
+  border-radius: 50%;
 }
 
 .profile-comparison {
