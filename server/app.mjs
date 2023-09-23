@@ -15,7 +15,7 @@ const corsOptions = {
     "http://192.168.1.91:3000",
     "https://soundmates-for-spotify-frontend.onrender.com",
   ],
-  credentials: true, // Allow credentials (cookies, headers) to be sent with the request
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
