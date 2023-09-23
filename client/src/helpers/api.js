@@ -52,10 +52,12 @@ export async function fetchUserData() {
       throw new Error(`Could Not fetch user data. Error: ${response.body}`);
     }
 
-    // result is okay -- going to assume logged in for now
-    sessionStorage.setItem("loggedIn", "true");
-
     const result = await response.json();
+
+    if (result.id) {
+      // result is okay -- going to assume logged in for now
+      sessionStorage.setItem("loggedIn", "true");
+    }
     return result;
   } catch (error) {
     console.error(
