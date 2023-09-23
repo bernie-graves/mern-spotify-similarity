@@ -39,7 +39,7 @@ function MyNavbar() {
   };
 
   useEffect(() => {
-    const refTknCookie = Cookies.get("refTkn");
+    const refTknCookie = Cookies.get("loggedIn");
     setHasRefTknCookie(!!refTknCookie);
 
     const fetchData = async () => {

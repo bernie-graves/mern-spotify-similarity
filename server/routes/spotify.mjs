@@ -380,12 +380,14 @@ router.get("/user-data", accTknRefreshments, async (req, res) => {
       // If the user document exists, return it with an added "friends" key
       userResult.friends = existingUser.friends;
       res.setHeader("Content-Type", "application/json");
+      res.cookie("loggedIn", "true"); // Set the loggedIn cookie
       return res.status(200).send(JSON.stringify(userResult, null, 2));
     } else {
       // If the user document doesn't exist, insert a new one with an empty "friends" array
       userResult.friends = [];
       await usersCollection.insertOne(userResult);
       res.setHeader("Content-Type", "application/json");
+      res.cookie("loggedIn", "true"); // Set the loggedIn cookie
       return res.status(200).send(JSON.stringify(userResult, null, 2));
     }
   } catch (err) {
