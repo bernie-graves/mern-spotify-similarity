@@ -41,14 +41,12 @@ function MyNavbar() {
   // Define a function to handle when loggedIn is updates
   const handleStorageChange = (e) => {
     if (e.key === "loggedIn") {
+      console.log("loggedIn Key changed");
       // The 'loggedIn' variable in sessionStorage has changed
       if (e.newValue === "true") {
         // update state var -- shows tabs and profile pic
         const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
         setLoggedIn(sessionStorageLoggedIn === "true");
-      } else {
-        // Perform actions when 'loggedIn' is false
-        console.log("User is not logged in");
       }
     }
   };
