@@ -42,7 +42,7 @@ const accTknRefreshments = (req, res, next) => {
         res.cookie("accTkn", newAccTok, {
           maxAge: data.body["expires_in"] * 1000,
           httpOnly: false,
-          sameSite: "none",
+          sameSite: "lax",
           secure: true,
         });
 
@@ -182,12 +182,12 @@ router.get("/redpage", (req, res) => {
       res.cookie("accTkn", data.body["access_token"], {
         maxAge: data.body["expires_in"] * 1000,
         httpOnly: false,
-        sameSite: "none",
+        sameSite: "lax",
         secure: true,
       });
       res.cookie("refTkn", data.body["refresh_token"], {
         httpOnly: false,
-        sameSite: "none",
+        sameSite: "lax",
         secure: true,
       });
 
