@@ -38,23 +38,7 @@ function MyNavbar() {
     alert("Link copied to clipboard!");
   };
 
-  // Define a function to handle when loggedIn is updates
-  const handleStorageChange = (e) => {
-    if (e.key === "loggedIn") {
-      console.log("loggedIn Key changed");
-      // The 'loggedIn' variable in sessionStorage has changed
-      if (e.newValue === "true") {
-        // update state var -- shows tabs and profile pic
-        const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
-        setLoggedIn(sessionStorageLoggedIn === "true");
-      }
-    }
-  };
-
   useEffect(() => {
-    // event listener for when storage changes
-    window.addEventListener("storage", handleStorageChange);
-
     const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
     setLoggedIn(sessionStorageLoggedIn === "true");
 
@@ -65,6 +49,11 @@ function MyNavbar() {
           ...prevData,
           ...userData,
         }));
+
+        // if get user data - set logged in to true
+        if (userData.id) {
+          setLoggedIn(true);
+        }
 
         const shareLink = await generateShareLink();
         setShareLink(shareLink);
