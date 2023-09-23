@@ -1,4 +1,5 @@
 // api.js
+import Cookies from "js-cookie";
 
 export async function generateShareLink() {
   const redirectUri = `${
@@ -37,6 +38,7 @@ export async function generateShareLink() {
 
 export async function fetchUserData() {
   try {
+    console.log("Cookie is: " + Cookies.get("refTkn"));
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URI}/api/spotify/user-data`,
       {
