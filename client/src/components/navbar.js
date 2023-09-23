@@ -15,7 +15,7 @@ import { faCopy, faShare } from "@fortawesome/free-solid-svg-icons";
 import { generateShareLink, fetchUserData } from "../helpers/api";
 
 function MyNavbar() {
-  const [hasRefTknCookie, setHasRefTknCookie] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({
     displayName: null,
     email: null,
@@ -39,8 +39,8 @@ function MyNavbar() {
   };
 
   useEffect(() => {
-    const refTknCookie = Cookies.get("loggedIn");
-    setHasRefTknCookie(!!refTknCookie);
+    const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
+    setLoggedIn(sessionStorageLoggedIn === "true");
 
     const fetchData = async () => {
       try {
@@ -66,17 +66,17 @@ function MyNavbar() {
         <Navbar.Brand href="/">Soundmates for Spotify</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className="justify-content-end">
-          {hasRefTknCookie && (
+          {loggedIn && (
             <Nav.Link href="/friends" className="ml-lg-2 mr-lg-2">
               Friends
             </Nav.Link>
           )}
-          {hasRefTknCookie && (
+          {loggedIn && (
             <Nav.Link href="/faves" className="ml-lg-2 mr-lg-2">
               Favorites
             </Nav.Link>
           )}
-          {hasRefTknCookie && (
+          {loggedIn && (
             <div>
               {/* Use the Button component and the share icon */}
               <Button
@@ -95,13 +95,13 @@ function MyNavbar() {
               </Button>
             </div>
           )}
-          {hasRefTknCookie && user.profileImageUrl ? (
+          {loggedIn && user.profileImageUrl ? (
             <img
               src={user.profileImageUrl}
               className="profile-picture"
               alt="Profile"
             />
-          ) : hasRefTknCookie ? (
+          ) : loggedIn ? (
             <img
               src={"/static/images/profile-placeholder.png"}
               className="profile-picture"
@@ -111,7 +111,7 @@ function MyNavbar() {
             <div></div>
           )}
         </Nav>
-        {!hasRefTknCookie && (
+        {!loggedIn && (
           <a
             href={`${process.env.REACT_APP_BACKEND_URI}/api/spotify/login`}
             className="btn btn-primary"
