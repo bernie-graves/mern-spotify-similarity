@@ -52,18 +52,9 @@ export async function fetchUserData() {
       throw new Error(`Could Not fetch user data. Error: ${response.body}`);
     }
 
-    if (response.headers.has("X-LoggedIn")) {
-      const loggedInValue = response.headers.get("X-LoggedIn");
-      if (loggedInValue === "true") {
-        console.log("User is logged in");
-        // setting logged in to true in session storage
-        sessionStorage.setItem("loggedIn", "true");
-      } else {
-        console.log("User is not logged in");
-      }
-    } else {
-      console.log("X-LoggedIn header not found in the response");
-    }
+    // result is okay -- going to assume logged in for now
+    sessionStorage.setItem("loggedIn", "true");
+
     const result = await response.json();
     return result;
   } catch (error) {
