@@ -63,10 +63,6 @@ function MyNavbar() {
     };
 
     fetchData();
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
   }, []);
 
   return (
