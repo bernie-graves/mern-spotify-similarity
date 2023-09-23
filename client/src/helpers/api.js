@@ -1,14 +1,14 @@
 // api.js
 
 export async function generateShareLink() {
+  const BACKEND_URI =
+    process.env.REACT_APP_BACKEND_URI || process.env.RENDER_EXTERNAL_URL;
   const redirectUri = `${
     process.env.REACT_APP_CLIENT_URI
       ? process.env.REACT_APP_CLIENT_URI
       : process.env.RENDER_EXTERNAL_URL
   }/add_friend`;
-  const url = `${
-    process.env.REACT_APP_BACKEND_URI
-  }/api/spotify/generate-share-link?redirect_uri=${encodeURIComponent(
+  const url = `${BACKEND_URI}/api/spotify/generate-share-link?redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;
 
@@ -37,13 +37,10 @@ export async function generateShareLink() {
 
 export async function fetchUserData() {
   try {
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/user-data`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${BACKEND_URI}/api/spotify/user-data`, {
+      method: "GET",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       //
@@ -64,7 +61,7 @@ export async function fetchUserData() {
 export async function fetchSpecificUserData(userID) {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/specific-user-data?userID=${userID}`,
+      `${BACKEND_URI}/api/spotify/specific-user-data?userID=${userID}`,
       {
         method: "GET",
         credentials: "include",
@@ -86,7 +83,7 @@ export async function fetchSpecificUserData(userID) {
 export async function fetchSimilarityData(user1_ID, user2_ID) {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_URI}/api/similarity/calculate-similarity?user1_ID=${user1_ID}&user2_ID=${user2_ID}`,
+      `${BACKEND_URI}/api/similarity/calculate-similarity?user1_ID=${user1_ID}&user2_ID=${user2_ID}`,
       {
         method: "GET",
         credentials: "include",

@@ -15,6 +15,9 @@ import { faCopy, faShare } from "@fortawesome/free-solid-svg-icons";
 import { generateShareLink, fetchUserData } from "../helpers/api";
 
 function MyNavbar() {
+  // backend uri is either provided (in dev) or will be the same as the backend
+  const BACKEND_URI =
+    process.env.REACT_APP_BACKEND_URI || process.env.RENDER_EXTERNAL_URL;
   const [hasRefTknCookie, setHasRefTknCookie] = useState(false);
   const [user, setUser] = useState({
     displayName: null,
@@ -113,7 +116,7 @@ function MyNavbar() {
         </Nav>
         {!hasRefTknCookie && (
           <a
-            href={`${process.env.REACT_APP_BACKEND_URI}/api/spotify/login`}
+            href={`${BACKEND_URI}/api/spotify/login`}
             className="btn btn-primary"
             style={{
               backgroundColor: "black",
