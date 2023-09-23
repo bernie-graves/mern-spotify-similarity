@@ -71,6 +71,7 @@ const SingleTermSimilarityDisplay = ({
         `${process.env.REACT_APP_BACKEND_URI}/api/spotify/generate-playlist`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
