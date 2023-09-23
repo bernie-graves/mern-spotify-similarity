@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-and-yarn": "cd frontend && npm run build && cd .. && yarn"
+    "build-and-yarn": "cd client && npm run build && cd .. && yarn"
   },
   "eslintConfig": {
     "extends": [
