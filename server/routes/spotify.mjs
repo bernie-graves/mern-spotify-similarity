@@ -43,6 +43,7 @@ const accTknRefreshments = (req, res, next) => {
           maxAge: data.body["expires_in"] * 1000,
           httpOnly: false,
           sameSite: "none",
+          secure: true,
         });
 
         // Add the new access token to the request headers
@@ -182,10 +183,12 @@ router.get("/redpage", (req, res) => {
         maxAge: data.body["expires_in"] * 1000,
         httpOnly: false,
         sameSite: "none",
+        secure: true,
       });
       res.cookie("refTkn", data.body["refresh_token"], {
         httpOnly: false,
         sameSite: "none",
+        secure: true,
       });
 
       // Set the access token on the API object to use it in later calls
