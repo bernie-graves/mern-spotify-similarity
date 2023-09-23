@@ -12,6 +12,11 @@ const RED_URI =
   `${process.env.RENDER_EXTERNAL_URL}/api/spotify/redpage` ||
   `http://192.168.1.91:5050/api/spotify/redpage`;
 
+const CLIENT_URI =
+  process.env.CLIENT_URI ||
+  process.env.RENDER_EXTERNAL_URL ||
+  "http://192.168.1.91:5050";
+
 // This object is going to be used for authentication alone. We make separate SpotifyWebApis for our actual API calls with access tokens.
 import SpotifyWebApi from "spotify-web-api-node";
 const spotifyAuthAPI = new SpotifyWebApi({
@@ -204,7 +209,7 @@ router.get("/redpage", (req, res) => {
 
         res.clearCookie("authState");
 
-        return res.redirect(`${process.env.CLIENT_URI}/faves`);
+        return res.redirect(`${CLIENT_URI}/faves`);
       }
     });
   }
@@ -563,9 +568,7 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   }
 
   // Construct the share link
-  const shareLink = `${
-    process.env.CLIENT_URI
-  }/api/spotify/login?userId=${userID}&redirect_uri=${encodeURIComponent(
+  const shareLink = `${CLIENT_URI}/api/spotify/login?userId=${userID}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;
 
