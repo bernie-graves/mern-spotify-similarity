@@ -38,7 +38,7 @@ export async function generateShareLink() {
 
 export async function fetchUserData() {
   try {
-    console.log("Cookie is: " + Cookies.get("refTkn"));
+    console.log("Cookie is: " + document.cookie);
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URI}/api/spotify/user-data`,
       {
