@@ -67,13 +67,16 @@ const SingleTermSimilarityDisplay = ({
       };
 
       // Send the POST request
-      const response = await fetch("/api/spotify/generate-playlist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data), // Convert data to JSON string
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/api/spotify/generate-playlist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data), // Convert data to JSON string
+        }
+      );
 
       if (response.ok) {
         // Request was successful
