@@ -16,6 +16,7 @@ const corsOptions = {
     "https://soundmates-for-spotify-frontend.onrender.com",
   ],
   credentials: true,
+  exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));
