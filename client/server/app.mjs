@@ -7,6 +7,13 @@ import test_routes from "./routes/test_routes.mjs";
 import spotify_routes from "./routes/spotify.mjs";
 import similarity_routes from "./routes/similarity-calculator.mjs";
 
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const PORT = process.env.PORT || 5050;
 const app = express();
 
@@ -26,6 +33,12 @@ app.use(express.json());
 app.use("/test", test_routes);
 app.use("/api/spotify/", spotify_routes);
 app.use("/api/similarity", similarity_routes);
+
+app.use(express.static(path.join(__dirname, "../build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../build/index.html"));
+});
 
 // start the Express server
 app.listen(PORT, "0.0.0.0", () => {
