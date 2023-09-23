@@ -9,6 +9,7 @@ import AddFriendsPage from "./pages/addFriendPage";
 import FriendsSimilarityPage from "./pages/friendSimilarityPage";
 
 function App() {
+  sessionStorage.setItem("loggedIn", "false");
   return (
     <div className="App">
       <MyNavbar />
