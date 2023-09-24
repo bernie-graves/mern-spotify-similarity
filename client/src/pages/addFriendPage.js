@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { fetchSpecificUserData, fetchUserData } from "../helpers/api";
 import "../styles/buttons.css";
 import "../styles/card.css";
@@ -11,47 +10,63 @@ function AddFriendsPage() {
   const [senderID, setSenderID] = useState("");
   const [senderName, setSenderName] = useState("");
   const [senderImageURL, setSenderImageURL] = useState("");
-  const [recieverID, setRecieverID] = useState("");
-  const [recieverName, setRecieverName] = useState("");
-  const [authState, setAuthState] = useState("");
+  const [receiverID, setReceiverID] = useState("");
+
+  // only set to true if unauthorized token tries to add
+  const [unsuccessfulAdd, setUnsuccessfulAdd] = useState(false);
+  const [friendToken, setFriendToken] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Fetch sender user data
   useEffect(() => {
-    // Get URL parameters and set states
+    async function fetchSenderUserData() {
+      try {
+        const senderUserData = await fetchSpecificUserData(senderID);
+        setSenderName(senderUserData.displayName);
+        setSenderImageURL(senderUserData.profileImageUrl);
+      } catch (error) {
+        console.error("Error fetching sender's user data:", error);
+      }
+    }
+
+    if (senderID && !unsuccessfulAdd) {
+      fetchSenderUserData();
+    }
+  }, [senderID, unsuccessfulAdd]);
+
+  // Fetch receiver user data
+  useEffect(() => {
+    async function fetchReceiverUserData() {
+      try {
+        const receiverUserData = await fetchUserData();
+        setReceiverID(receiverUserData.id);
+      } catch (error) {
+        console.error("Error fetching current user data:", error);
+      }
+    }
+
+    fetchReceiverUserData();
+  }, []);
+
+  // Get URL parameters and set states
+  useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     setSenderID(queryParams.get("sender_userID"));
-    setAuthState(queryParams.get("auth_state"));
-
-    // Fetch sender user data if authorized codes match
-    if (authState === Cookies.get("authState")) {
-      // Fetch sender's user data
-      fetchSpecificUserData(senderID)
-        .then((senderUserData) => {
-          setSenderName(senderUserData.displayName);
-          setSenderImageURL(senderUserData.profileImageUrl);
-        })
-        .catch((error) => {
-          console.error("Error fetching sender's user data:", error);
-        });
-
-      // Fetch receiver's user data
-      fetchUserData()
-        .then((receiverUserData) => {
-          setRecieverID(receiverUserData.id);
-          setRecieverName(receiverUserData.displayName);
-        })
-        .catch((error) => {
-          console.error("Error fetching current user data:", error);
-        });
-    }
-  }, [location.search, senderID, authState]);
+    setFriendToken(queryParams.get("friend_token"));
+  }, [location.search]);
 
   // Function to handle the "Confirm" button click
   const handleConfirmClick = () => {
     // Make a GET request to /api/spotify/complete_friend_request with sender_userID as a query parameter
-    fetch(`/api/spotify/complete_friend_request?sender_userID=${senderID}`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/complete_friend_request?sender_userID=${senderID}&friend_token=${friendToken}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((response) => {
         if (response.ok) {
           // Handle success
@@ -59,11 +74,14 @@ function AddFriendsPage() {
 
           // Redirect the user to /friends_similarity
           navigate(
-            `/friend_similarity?user_1=${senderID}&user_2=${recieverID}`
+            `/friend_similarity?user_1=${senderID}&user_2=${receiverID}`
           );
         } else {
           // Handle errors
           console.error("Error confirming friend request.");
+
+          // set unsuccessful state
+          setUnsuccessfulAdd(true);
         }
       })
       .catch((error) => {
@@ -74,20 +92,20 @@ function AddFriendsPage() {
   return (
     <div style={{ color: "whitesmoke", textAlign: "center" }}>
       <h1>Friend Request</h1>
-      {authState === Cookies.get("authState") && (
+      {!unsuccessfulAdd && (
         <img
           src={senderImageURL}
           alt="Sender's Profile"
           className="profile-picture-large" // Add a class for the profile image
         />
       )}
-      <h3>{senderName} wants to be friends with you!</h3>
+      <h3>{senderID} wants to be friends with you!</h3>
 
       <p className="light-text">
         By accepting, they will be able to see your top songs, artists and
         genres.
       </p>
-      {authState === Cookies.get("authState") ? (
+      {!unsuccessfulAdd ? (
         <div>
           {/* "Add Friend" button */}
           <button
@@ -107,7 +125,10 @@ function AddFriendsPage() {
         </div>
       ) : (
         <div>
-          <p>You are not allowed to add the other user.</p>
+          <p>
+            You are not authorized to add the other user. Please ask them for a
+            new link!
+          </p>
           <button
             onClick={() => navigate("/")}
             className="friend-button cancel-button" // Add classes for styling
