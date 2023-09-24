@@ -52,17 +52,13 @@ export async function fetchUserData() {
       throw new Error(`Could Not fetch user data. Error: ${response.body}`);
     }
 
-    // loggin to see whats wrong with this request on mobile
-    const responseText = await response.text();
-    console.log("Response Body:", responseText);
+    const result = await response.json();
 
-    // const result = await response.json();
-
-    // if (result.id) {
-    //   // result is okay -- going to assume logged in for now
-    //   sessionStorage.setItem("loggedIn", "true");
-    // }
-    return responseText;
+    if (result.id) {
+      // result is okay -- going to assume logged in for now
+      sessionStorage.setItem("loggedIn", "true");
+    }
+    return result;
   } catch (error) {
     console.error(
       "There was a problem with the fetch operation in fetchUserData:",
