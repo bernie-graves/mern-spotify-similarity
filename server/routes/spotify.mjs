@@ -12,6 +12,18 @@ const RED_URI =
   `${process.env.RENDER_EXTERNAL_URL}/api/spotify/redpage` ||
   `http://192.168.1.91:5050/api/spotify/redpage`;
 
+const localCookieSettings = {};
+
+const secureCookieSettings = {
+  httpOnly: false,
+  sameSite: "none",
+  secure: true,
+};
+
+const cookieSettings = RED_URI.startsWith("https://")
+  ? secureCookieSettings
+  : localCookieSettings;
+
 // This object is going to be used for authentication alone. We make separate SpotifyWebApis for our actual API calls with access tokens.
 import SpotifyWebApi from "spotify-web-api-node";
 const spotifyAuthAPI = new SpotifyWebApi({
@@ -38,13 +50,11 @@ const accTknRefreshments = (req, res, next) => {
         const newAccTok = data.body["access_token"];
         console.log("NEW ACCESS TOKEN OBJECT: " + newAccTok);
 
+        const accCookieSettings = cookieSettings;
+        accCookieSettings["maxAge"] = data.body["expires_in"] * 1000;
+
         // Set the new access token in a cookie
-        res.cookie("accTkn", newAccTok, {
-          maxAge: data.body["expires_in"] * 1000,
-          httpOnly: false,
-          sameSite: "none",
-          secure: true,
-        });
+        res.cookie("accTkn", newAccTok, accCookieSettings);
 
         // Add the new access token to the request headers
         req.headers["newAccessToken"] = newAccTok;
@@ -151,12 +161,12 @@ router.get("/login", (req, res) => {
     const redirectUri = req.query.redirect_uri;
 
     // send them through as cookies
-    res.cookie("next_uri", redirectUri);
-    res.cookie("sender_userID", senderUserID);
+    res.cookie("next_uri", redirectUri, cookieSettings);
+    res.cookie("sender_userID", senderUserID, cookieSettings);
   }
 
   const stateString = generateRandomString(16);
-  res.cookie("authState", stateString);
+  res.cookie("authState", stateString, cookieSettings);
 
   const scopes = [
     "user-top-read",
@@ -176,20 +186,16 @@ router.get("/redpage", (req, res) => {
   }
 
   const authenticationCode = req.query.code;
+  console.log("Auth Code: " + authenticationCode);
   if (authenticationCode) {
     spotifyAuthAPI.authorizationCodeGrant(authenticationCode).then((data) => {
       console.log("access token: " + data.body["access_token"]);
-      res.cookie("accTkn", data.body["access_token"], {
-        maxAge: data.body["expires_in"] * 1000,
-        httpOnly: false,
-        sameSite: "none",
-        secure: true,
-      });
-      res.cookie("refTkn", data.body["refresh_token"], {
-        httpOnly: false,
-        sameSite: "none",
-        secure: true,
-      });
+
+      const accCookieSettings = cookieSettings;
+      accCookieSettings["maxAge"] = data.body["expires_in"] * 1000;
+
+      res.cookie("accTkn", data.body["access_token"], accCookieSettings);
+      res.cookie("refTkn", data.body["refresh_token"], cookieSettings);
 
       // Set the access token on the API object to use it in later calls
       spotifyAuthAPI.setAccessToken(data.body["access_token"]);
@@ -572,10 +578,11 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
     return res.status(400).json({ message: "Missing redirectUri parameter" });
   }
 
+  const protocol = req.protocol;
+  const host = req.get("host");
+
   // Construct the share link
-  const shareLink = `${
-    process.env.CLIENT_URI
-  }/api/spotify/login?userId=${userID}&redirect_uri=${encodeURIComponent(
+  const shareLink = `${protocol}://${host}/api/spotify/login?userId=${userID}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}`;
 
