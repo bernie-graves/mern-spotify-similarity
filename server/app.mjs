@@ -14,6 +14,7 @@ const corsOptions = {
   origin: [
     "http://192.168.1.91:3000",
     "https://soundmates-for-spotify-frontend.onrender.com",
+    "https://soundmates-for-spotify.com",
   ],
   credentials: true,
   exposedHeaders: ["set-cookie", "Content-Type"],
