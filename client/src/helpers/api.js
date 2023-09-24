@@ -2,11 +2,12 @@
 import Cookies from "js-cookie";
 
 export async function generateShareLink() {
-  const redirectUri = `${
-    process.env.REACT_APP_CLIENT_URI
-      ? process.env.REACT_APP_CLIENT_URI
-      : process.env.RENDER_EXTERNAL_URL
-  }/add_friend`;
+  const CLIENT_URI =
+    process.env.REACT_APP_CLIENT_URI ||
+    process.env.RENDER_EXTERNAL_URL ||
+    "https://soundmates-for-spotify-frontend.onrender.com";
+
+  const redirectUri = `${CLIENT_URI}/add_friend`;
   const url = `${
     process.env.REACT_APP_BACKEND_URI
   }/api/spotify/generate-share-link?redirect_uri=${encodeURIComponent(
