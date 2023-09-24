@@ -108,7 +108,7 @@ function MyNavbar() {
             />
           ) : loggedIn ? (
             <img
-              src={"/static/images/profile-placeholder.png"}
+              src="/static/images/profile-placeholder.png"
               className="profile-picture"
               alt="Profile"
             />
@@ -128,7 +128,7 @@ function MyNavbar() {
             Connect{" "}
             <img
               style={{ width: "3.5vh", height: "3.5vh" }}
-              src={"/static/images/spotify-logo.png"}
+              src="/static/images/spotify-logo.png"
               alt="Spotify Logo"
             />
           </a>
