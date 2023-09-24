@@ -58,11 +58,11 @@ export async function fetchUserData() {
 
     const result = await response.json();
 
-    if (result.id) {
-      // result is okay -- going to assume logged in for now
-      sessionStorage.setItem("loggedIn", "true");
-    }
-    return result;
+    // if (result.id) {
+    //   // result is okay -- going to assume logged in for now
+    //   sessionStorage.setItem("loggedIn", "true");
+    // }
+    return responseText;
   } catch (error) {
     console.error(
       "There was a problem with the fetch operation in fetchUserData:",
