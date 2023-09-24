@@ -494,7 +494,6 @@ router.get("/complete_friend_request", accTknRefreshments, async (req, res) => {
 
     // check if token matches what is in db
     const token = req.query.friend_token;
-    console.log("token: " + token);
     const tokenQuery = {
       senderID: senderUserID,
       token: token,
