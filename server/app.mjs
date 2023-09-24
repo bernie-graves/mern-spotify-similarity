@@ -16,31 +16,12 @@ const corsOptions = {
     "https://soundmates-for-spotify-frontend.onrender.com",
   ],
   credentials: true,
-  exposedHeaders: ["set-cookie"],
+  exposedHeaders: ["set-cookie", "Content-Type"],
 };
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-
-// Enable CORS for all routes
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins, change '*' to your frontend URL for production
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  ); // Allow these HTTP methods
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allow these headers
-  res.setHeader("Access-Control-Allow-Credentials", "true"); // Allow credentials (cookies, etc.) to be sent
-
-  // Handle preflight requests (OPTIONS method)
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // Respond with 200 OK for preflight requests
-  }
-
-  // Continue processing the request
-  next();
-});
 
 // use the routes
 app.use("/test", test_routes);
