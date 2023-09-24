@@ -69,16 +69,6 @@ desktop.ini
 *.sqlite
 *.sqlite3
 
-# Images and media files
-*.bmp
-*.gif
-*.jpg
-*.jpeg
-*.png
-*.svg
-*.tiff
-*.webp
-
 # Dependency directories
 .bower/
 jspm_packages/
