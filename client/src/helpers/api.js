@@ -53,10 +53,11 @@ export async function fetchUserData() {
     }
 
     // loggin to see whats wrong with this request on mobile
-    const responseText = await response.text();
-    console.log("Response Body:", responseText);
+    // const responseText = await response.text();
+    // console.log("Response Body:", responseText);
 
     const result = await response.json();
+    console.log("User JSON: " + JSON.stringify(result));
 
     if (result.id) {
       // result is okay -- going to assume logged in for now
