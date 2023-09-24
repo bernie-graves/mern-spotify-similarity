@@ -444,14 +444,14 @@ router.get("/specific-user-data", accTknRefreshments, async (req, res) => {
 
     if (existingUser) {
       // if specific user exists in db return their doc
-      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
       return res.status(200).send(JSON.stringify(existingUser, null, 2));
     } else {
       // If the user document doesn't exist
       const noResult = {
         message: `${requestedUserID} does not exist in our database`,
       };
-      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
       return res.status(200).send(JSON.stringify(noResult, null, 2));
     }
   } catch (err) {
