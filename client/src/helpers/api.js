@@ -57,8 +57,8 @@ export async function fetchUserData() {
     // console.log("Response Body:", responseText);
 
     const result = await response.text();
+    console.log("User JSON text: " + result);
     const jsonResult = JSON.parse(result);
-    console.log("User JSON: " + JSON.stringify(jsonResult));
 
     if (jsonResult.id) {
       // result is okay -- going to assume logged in for now
