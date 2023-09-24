@@ -52,6 +52,10 @@ export async function fetchUserData() {
       throw new Error(`Could Not fetch user data. Error: ${response.body}`);
     }
 
+    // loggin to see whats wrong with this request on mobile
+    const responseText = await response.text();
+    console.log("Response Body:", responseText);
+
     const result = await response.json();
 
     if (result.id) {
