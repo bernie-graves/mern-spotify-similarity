@@ -68,7 +68,17 @@ function MyNavbar() {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">Soundmates for Spotify</Navbar.Brand>
+        <Navbar.Brand href="/">
+          {" "}
+          <img
+            src="favicon.ico"
+            alt="Logo"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+          />{" "}
+          Soundmates for Spotify
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className="justify-content-end">
           {loggedIn && (
@@ -90,6 +100,8 @@ function MyNavbar() {
                   borderRadius: "50%",
                   marginLeft: "10px",
                   marginRight: "10px",
+                  color: "#1DB954",
+                  borderColor: "#1DB954",
                 }}
                 className="profile-picture"
                 onClick={() => {

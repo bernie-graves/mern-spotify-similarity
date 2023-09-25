@@ -98,3 +98,18 @@
   }
   
 
+/* CSS */
+.share-button {
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: transparent;
+  border-color: #1DB954;
+  color: #1DB954;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: #1db954;
+  color: #ffffff;
+}

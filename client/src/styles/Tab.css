@@ -4,7 +4,7 @@
 .tabs {
     display: flex;
     background-color: #000;
-    color: #fff;
+    color: whitesmoke;
     border-radius: 8px;
     
   }
@@ -16,7 +16,7 @@
     cursor: pointer;
     text-align: center;
     background-color: #000;
-    color: #fff;
+    color: whitesmoke;
     border: none;
     outline: none;
     border-radius: 8px;

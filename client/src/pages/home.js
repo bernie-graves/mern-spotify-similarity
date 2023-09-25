@@ -24,7 +24,7 @@ function HomePage() {
       <p>
         Whether you're looking for new music recommendations, want to see what
         your friends are listening to, or simply want to share your musical
-        journey, Spotify Music Match has got you covered.
+        journey, Soundmates has got you covered.
       </p>
       <p>
         To get started, log in with your Spotify account and let the music

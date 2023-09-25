@@ -1,6 +1,6 @@
 .song-card {
     background-color: #333; /* Dark grey background */
-    color: white; /* White text color */
+    color: whitesmoke; /* White text color */
     display: flex;
     border-radius: 8px;
     margin-top: 10px;
@@ -33,7 +33,7 @@
   
   .artist-names {
     font-size: 1rem; /* Slightly smaller font size for artist names */
-    color: #ccc; /* Lighter grey color for artist names */
+    color: #b6b5b5; /* Lighter grey color for artist names */
   }
 
   .card-container {
