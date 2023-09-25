@@ -3,7 +3,7 @@
     height: 300px;
     border-radius: 50%; /* Make it circular */
     background-color: #159542; /* Set the background color */
-    color: #fff; /* Set the text color */
+    color: whitesmoke; /* Set the text color */
     border: none; /* Remove the default button border */
     cursor: pointer; /* Add a pointer cursor on hover */
     outline: none; /* Remove the button outline on click */

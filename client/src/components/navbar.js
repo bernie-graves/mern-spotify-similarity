@@ -25,6 +25,7 @@ function MyNavbar() {
   });
 
   const [showShareModal, setShowShareModal] = useState(false); // State for showing the share modal
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [shareLink, setShareLink] = useState(""); // State to store the share link
 
   const copyToClipboardNavbar = () => {
@@ -36,6 +37,18 @@ function MyNavbar() {
     document.execCommand("copy");
     document.body.removeChild(tempInput);
     alert("Link copied to clipboard!");
+  };
+
+  const handleLogout = () => {
+    // Handle the logout action here
+    // For example, you can clear cookies, log the user out, etc.
+    // Then redirect the user to the login page or wherever you want.
+  };
+
+  const handleRemoveDataAndLogout = () => {
+    // Handle the remove data and logout action here
+    // This could involve clearing user data and logging them out
+    // Then redirect the user to the login page or wherever you want.
   };
 
   useEffect(() => {
@@ -112,17 +125,14 @@ function MyNavbar() {
               </Button>
             </div>
           )}
-          {loggedIn && user.profileImageUrl ? (
+          {loggedIn ? (
             <img
-              src={user.profileImageUrl}
+              src={
+                user.profileImageUrl || "/static/images/profile-placeholder.png"
+              }
               className="profile-picture"
               alt="Profile"
-            />
-          ) : loggedIn ? (
-            <img
-              src="/static/images/profile-placeholder.png"
-              className="profile-picture"
-              alt="Profile"
+              onClick={() => setShowProfileModal(true)}
             />
           ) : (
             <div></div>
@@ -174,6 +184,35 @@ function MyNavbar() {
                   <FontAwesomeIcon icon={faCopy} /> {/* Copy symbol */}
                 </button>
               </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+
+        {/* Profile Modal */}
+        <Modal
+          show={showProfileModal}
+          onHide={() => setShowProfileModal(false)}
+          dialogClassName="dark-theme-modal"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Profile Options</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="d-grid gap-2">
+              <Button
+                variant="outline-danger"
+                onClick={handleRemoveDataAndLogout}
+                size="lg" // Set the button size to large
+              >
+                Remove All Data and Log Out
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleLogout}
+                size="lg" // Set the button size to large
+              >
+                Log Out
+              </Button>
             </div>
           </Modal.Body>
         </Modal>
