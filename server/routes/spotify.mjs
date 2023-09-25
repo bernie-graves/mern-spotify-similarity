@@ -9,8 +9,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
 const RED_URI =
   process.env.RED_URI ||
-  `${process.env.RENDER_EXTERNAL_URL}/api/spotify/redpage` ||
-  `http://192.168.1.91:5050/api/spotify/redpage`;
+  `https://server.soundmates-for-spotify.com/api/spotify/redpage`;
 
 const localCookieSettings = {};
 

@@ -5,7 +5,7 @@ export async function generateShareLink() {
   const CLIENT_URI =
     process.env.REACT_APP_CLIENT_URI ||
     process.env.RENDER_EXTERNAL_URL ||
-    "https://soundmates-for-spotify-frontend.onrender.com";
+    "https://soundmates-for-spotify.com";
 
   const redirectUri = `${CLIENT_URI}/add_friend`;
   const url = `${
