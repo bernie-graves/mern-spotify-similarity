@@ -189,7 +189,6 @@ router.get("/login", (req, res) => {
 
   const scopes = [
     "user-top-read",
-    "user-read-email",
     "playlist-modify-private",
     "playlist-modify-public",
   ];
@@ -442,7 +441,6 @@ router.get("/user-data", accTknRefreshments, async (req, res) => {
   const userData = await spotifyAPI.getMe();
 
   const displayName = userData.body.display_name;
-  const email = userData.body.email;
   const id = userData.body.id;
   const profileImageUrl = userData.body.images[1]
     ? userData.body.images[1].url
@@ -451,7 +449,6 @@ router.get("/user-data", accTknRefreshments, async (req, res) => {
   // Create an object with the user's data
   const userResult = {
     displayName,
-    email,
     id,
     profileImageUrl: profileImageUrl,
   };

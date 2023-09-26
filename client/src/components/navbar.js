@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button"; // Import Button component
-import Modal from "react-bootstrap/Modal"; // Import Modal component
-import Cookies from "js-cookie";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import "../styles/profile-picture.css";
 import "../styles/modals.css";
 
