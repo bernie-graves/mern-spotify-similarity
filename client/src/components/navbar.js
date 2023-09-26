@@ -118,7 +118,7 @@ function MyNavbar() {
             height="30"
             className="d-inline-block align-top"
           />{" "}
-          Soundmates for Spotify
+          Soundmates for Spotify{" "}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Nav className="justify-content-end">
