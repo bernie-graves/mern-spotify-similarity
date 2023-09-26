@@ -11,7 +11,13 @@
     overflow: hidden; /* Hide overflowing text */;
     justify-content: center;
     align-items: center;
+    transition: transform 0.2s ease;
   }
+
+    /* Add hover effect for song card */
+    .song-card:hover {
+      transform: scale(1.05); 
+    }
   
   .album-cover {
     width: 100px; /* Adjust the width as needed */
@@ -130,4 +136,6 @@
 
   
   }
+
+
    

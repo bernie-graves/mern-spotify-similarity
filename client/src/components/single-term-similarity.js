@@ -114,6 +114,7 @@ const SingleTermSimilarityDisplay = ({
               songName={song.songName}
               artistNames={song.artistNames}
               albumCover={song.albumCover}
+              link={song.link}
             />
           ))
         ) : (
@@ -131,6 +132,7 @@ const SingleTermSimilarityDisplay = ({
               artistName={artist.artistName}
               genres={artist.genres}
               artistImage={artist.artistImage}
+              link={artist.link}
             />
           ))
         ) : (

@@ -106,6 +106,7 @@ async function fetchTopTracks(spotifyAPI, time_frame, count) {
       artistNames: item.artists.map((artist) => artist.name),
       albumCover: item.album.images[0].url,
       songID: item.id,
+      link: item.external_urls.spotify,
     }));
 
     return results;
@@ -129,6 +130,7 @@ async function fetchTopArtists(spotifyAPI, time_frame, count) {
       genres: item.genres,
       artistImage: item.images[0].url,
       artistID: item.id,
+      link: item.external_urls.spotify,
     }));
 
     return results;
