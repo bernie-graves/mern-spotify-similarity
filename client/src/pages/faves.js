@@ -112,7 +112,7 @@ function FavesPage() {
           <div>Loading...</div>
         ) : requestMade ? (
           <div>
-            <h2 style={{ color: "whitesmoke" }}>Your Favorite Songs:</h2>
+            <h2 style={{ color: "whitesmoke" }}>Your Favorites:</h2>
             <div
               style={{
                 paddingBottom: "10px",

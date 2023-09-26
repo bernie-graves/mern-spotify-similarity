@@ -10,12 +10,12 @@ const SongCard = ({ songName, artistNames, albumCover, link }) => {
           alt={`Album cover for ${songName}`}
           className="album-cover"
         />
-        <img
-          src="static/images/spotify-logo.png"
-          alt="Spotify Logo"
-          className="spotify-logo"
-        />
         <div className="song-details">
+          <img
+            src="static/images/spotify-logo-big.png"
+            alt="Spotify Logo"
+            className="spotify-logo-big"
+          />
           <h3 className="song-name">{songName}</h3>
           <p className="artist-names">{artistNames.join(", ")}</p>
         </div>

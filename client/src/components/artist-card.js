@@ -10,12 +10,12 @@ const ArtistCard = ({ artistName, genres, artistImage, link }) => {
           alt={`Profile for ${artistName}`}
           className="album-cover"
         />
-        <img
-          src="static/images/spotify-logo.png"
-          alt="Spotify Logo"
-          className="spotify-logo"
-        />
         <div className="song-details">
+          <img
+            src="static/images/spotify-logo-big.png"
+            alt="Spotify Logo"
+            className="spotify-logo-big"
+          />
           <h3 className="song-name">{artistName}</h3>
           <p className="artist-names">{genres.join(", ")}</p>
         </div>

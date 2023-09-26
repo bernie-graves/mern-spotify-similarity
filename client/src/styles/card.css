@@ -24,6 +24,13 @@
     height: 30px;
   }
 
+  .spotify-logo-big {
+    width: 4.3rem;
+    align-content: left;
+
+
+  }
+
     /* Add hover effect for song card */
     .song-card:hover {
       transform: scale(1.05); 
@@ -41,15 +48,24 @@
     overflow-wrap: break-word;
     white-space: initial; /* Hide overflowing text */
     text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
+    width: 90%;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+
   }
   
   .song-name {
-    font-size: 1.2rem; /* Larger font size for song name */
+    font-size: 1.25rem; /* Larger font size for song name */
+    text-align: left;
+    margin: 0;
   }
-  
+   
   .artist-names {
     font-size: 1rem; /* Slightly smaller font size for artist names */
     color: #b6b5b5; /* Lighter grey color for artist names */
+    text-align: left;
+    margin: 0;
   }
 
   .card-container {
