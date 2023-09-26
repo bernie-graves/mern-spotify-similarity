@@ -62,6 +62,8 @@ function FriendsSimilarityPage() {
     let isUser2_temp = false;
 
     const fetchData = async () => {
+      let user1InUser2FriendsList_temp = false;
+      let user2InUser1FriendsList_temp = false;
       try {
         const currentUserData = await fetchUserData();
 
@@ -78,66 +80,71 @@ function FriendsSimilarityPage() {
           console.log("Unauthorized user trying to view similarities.");
         }
 
-        // get both users data
-        const user1Data = await fetchSpecificUserData(user1_ID_temp);
-        const user2Data = await fetchSpecificUserData(user2_ID_temp);
+        try {
+          // get both users data
+          const user1Data = await fetchSpecificUserData(user1_ID_temp);
+          const user2Data = await fetchSpecificUserData(user2_ID_temp);
 
-        // if is user 1 check if in each other friends lists and set state vars for user2
-        if (isUser1_temp) {
-          setUser2InUser1FriendsList(
-            await currentUserData.friends.some(
+          // if is user 1 check if in each other friends lists and set state vars for user2
+          if (isUser1_temp) {
+            user2InUser1FriendsList_temp = await currentUserData.friends.some(
               (friend) => friend.id === user2_ID_temp
-            )
-          );
+            );
+            setUser2InUser1FriendsList(user2InUser1FriendsList_temp);
 
-          setUser1InUser2FriendsList(
-            await user2Data.friends.some(
+            user1InUser2FriendsList_temp = await user2Data.friends.some(
               (friend) => friend.id === user1_ID_temp
-            )
-          );
+            );
+            setUser1InUser2FriendsList(user1InUser2FriendsList_temp);
 
-          setUser2_ImageURL(user2Data.profileImageUrl);
-        }
+            setUser2_ImageURL(user2Data.profileImageUrl);
+          }
 
-        // if is user 2 check if in each other friends lists and set state vars for user1
-        if (isUser2_temp) {
-          setUser1InUser2FriendsList(
-            await currentUserData.friends.some(
+          // if is user 2 check if in each other friends lists and set state vars for user1
+          if (isUser2_temp) {
+            user1InUser2FriendsList_temp = await currentUserData.friends.some(
               (friend) => friend.id === user1_ID_temp
-            )
-          );
+            );
+            setUser1InUser2FriendsList(user1InUser2FriendsList_temp);
 
-          setUser2InUser1FriendsList(
-            await user1Data.friends.some(
+            user2InUser1FriendsList_temp = await user1Data.friends.some(
               (friend) => friend.id === user2_ID_temp
-            )
-          );
+            );
+            setUser2InUser1FriendsList(user2InUser1FriendsList_temp);
 
-          setUser1_ImageURL(user1Data.profileImageUrl);
+            setUser1_ImageURL(user1Data.profileImageUrl);
+          }
+
+          if (user1InUser2FriendsList_temp && user2InUser1FriendsList_temp) {
+            const similarity_results = await fetchSimilarityData(
+              user1_ID_temp,
+              user2_ID_temp
+            );
+            setShortTermScore(similarity_results.shortTermScore);
+            setMediumTermScore(similarity_results.mediumTermScore);
+            setLongTermScore(similarity_results.longTermScore);
+            setMusicMatchScore(similarity_results.musicMatchScore);
+
+            setSharedItems({
+              songsShortTerm: similarity_results.sharedSongsShortTerm,
+              songsMediumTerm: similarity_results.sharedSongsMediumTerm,
+              songsLongTerm: similarity_results.sharedSongsLongTerm,
+              artistsShortTerm: similarity_results.sharedArtistsShortTerm,
+              artistsMediumTerm: similarity_results.sharedArtistsMediumTerm,
+              artistsLongTerm: similarity_results.sharedArtistsLongTerm,
+              genresShortTerm: similarity_results.sharedGenresShortTerm,
+              genresMediumTerm: similarity_results.sharedGenresMediumTerm,
+              genresLongTerm: similarity_results.sharedGenresLongTerm,
+            });
+
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        } catch (err) {
+          // if cant fetch either of the users data just set loading to false
+          setLoading(false);
         }
-
-        const similarity_results = await fetchSimilarityData(
-          user1_ID_temp,
-          user2_ID_temp
-        );
-        setShortTermScore(similarity_results.shortTermScore);
-        setMediumTermScore(similarity_results.mediumTermScore);
-        setLongTermScore(similarity_results.longTermScore);
-        setMusicMatchScore(similarity_results.musicMatchScore);
-
-        setSharedItems({
-          songsShortTerm: similarity_results.sharedSongsShortTerm,
-          songsMediumTerm: similarity_results.sharedSongsMediumTerm,
-          songsLongTerm: similarity_results.sharedSongsLongTerm,
-          artistsShortTerm: similarity_results.sharedArtistsShortTerm,
-          artistsMediumTerm: similarity_results.sharedArtistsMediumTerm,
-          artistsLongTerm: similarity_results.sharedArtistsLongTerm,
-          genresShortTerm: similarity_results.sharedGenresShortTerm,
-          genresMediumTerm: similarity_results.sharedGenresMediumTerm,
-          genresLongTerm: similarity_results.sharedGenresLongTerm,
-        });
-
-        setLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.error("Error fetching current user data:", error);
       }
@@ -200,14 +207,6 @@ function FriendsSimilarityPage() {
 
   return (
     <div style={{ color: "whitesmoke" }}>
-      {/* {isUser1 || isUser2 ? (
-        <h3>
-          Hello {isUser1 ? user1_ID : user2_ID}! This is your Music Match page
-          with {isUser1 ? user2_ID : user1_ID}
-        </h3>
-      ) : (
-        <div>You are neither of the users supposed to see this page!</div>
-      )} */}
       {user1InUser2FriendsList &&
       user2InUser1FriendsList &&
       (isUser1 || isUser2) ? (
@@ -275,8 +274,10 @@ function FriendsSimilarityPage() {
         </div>
       ) : (
         <div>
-          You are not authorized to see this page. Make sure you are each others
-          friends. Add friends using the share button in the navigation bar.
+          Make sure you are each others friends If you were previously friends
+          and are confused, they may have opted to delete thier data. You can
+          use the share button in the navigation bar to send them a new friend
+          request.
         </div>
       )}
     </div>

@@ -34,9 +34,6 @@ function FriendsPage() {
       try {
         const data = await fetchUserData();
         setUserData(data);
-
-        const shareLink = await generateShareLink();
-        setShareLink(shareLink);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -57,7 +54,14 @@ function FriendsPage() {
         <button
           className="add-friends-button"
           style={{ paddingTop: "40px" }}
-          onClick={() => {
+          onClick={async () => {
+            try {
+              const shareLink = await generateShareLink();
+              setShareLink(shareLink);
+            } catch (error) {
+              console.error("Error generating share link:", error);
+            }
+
             setShowShareModal(true);
           }}
         >

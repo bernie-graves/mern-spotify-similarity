@@ -12,7 +12,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy, faShare } from "@fortawesome/free-solid-svg-icons";
 
 // import helper functions
-import { generateShareLink, fetchUserData } from "../helpers/api";
+import {
+  generateShareLink,
+  fetchUserData,
+  logOut,
+  removeUserData,
+  checkIfLoggedIn,
+} from "../helpers/api";
 
 function MyNavbar() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -39,44 +45,66 @@ function MyNavbar() {
     alert("Link copied to clipboard!");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Handle the logout action here
     // For example, you can clear cookies, log the user out, etc.
     // Then redirect the user to the login page or wherever you want.
+
+    const logOutResponse = await logOut();
+
+    console.log("Log out response: " + logOutResponse.message);
+    setShowProfileModal(false);
+
+    // send to home
+    window.location.href = "/";
   };
 
-  const handleRemoveDataAndLogout = () => {
+  const handleRemoveDataAndLogout = async () => {
     // Handle the remove data and logout action here
     // This could involve clearing user data and logging them out
     // Then redirect the user to the login page or wherever you want.
+
+    const removeUserDataMsg = await removeUserData();
+
+    console.log("Remove data response: " + removeUserDataMsg.message);
+
+    const logOutResponse = await logOut();
+    console.log("Log out response: " + logOutResponse.message);
+    setShowProfileModal(false);
+
+    // send to home
+    window.location.href = "/";
   };
 
   useEffect(() => {
+    console.log("Navbar useEffect ran");
     const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
-    setLoggedIn(sessionStorageLoggedIn === "true");
+    const isLoggedIn = sessionStorageLoggedIn === "true";
+    setLoggedIn(isLoggedIn);
 
     const fetchData = async () => {
       try {
-        const userData = await fetchUserData();
-        setUser((prevData) => ({
-          ...prevData,
-          ...userData,
-        }));
+        const loggedIn = await checkIfLoggedIn();
 
-        // if get user data - set logged in to true
-        if (userData.id) {
-          setLoggedIn(true);
+        if (loggedIn) {
+          const userData = await fetchUserData();
+          setUser((prevData) => ({
+            ...prevData,
+            ...userData,
+          }));
+
+          // if get user data - set logged in to true
+          if (userData.id) {
+            setLoggedIn(true);
+          }
         }
-
-        const shareLink = await generateShareLink();
-        setShareLink(shareLink);
       } catch (error) {
         console.error("There was a problem with data retrieval:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [loggedIn]);
 
   return (
     <Navbar bg="dark" variant="dark">
@@ -106,7 +134,7 @@ function MyNavbar() {
           )}
           {loggedIn && (
             <div>
-              {/* Use the Button component and the share icon */}
+              {/*share button*/}
               <Button
                 variant="outline-success"
                 style={{
@@ -117,7 +145,14 @@ function MyNavbar() {
                   borderColor: "#1DB954",
                 }}
                 className="profile-picture"
-                onClick={() => {
+                onClick={async () => {
+                  try {
+                    const shareLink = await generateShareLink();
+                    setShareLink(shareLink);
+                  } catch (error) {
+                    console.error("Error generating share link:", error);
+                  }
+
                   setShowShareModal(true);
                 }}
               >
@@ -202,15 +237,11 @@ function MyNavbar() {
               <Button
                 variant="outline-danger"
                 onClick={handleRemoveDataAndLogout}
-                size="lg" // Set the button size to large
+                size="lg"
               >
                 Remove All Data and Log Out
               </Button>
-              <Button
-                variant="danger"
-                onClick={handleLogout}
-                size="lg" // Set the button size to large
-              >
+              <Button variant="danger" onClick={handleLogout} size="lg">
                 Log Out
               </Button>
             </div>

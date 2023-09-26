@@ -35,7 +35,29 @@ export async function generateShareLink() {
   }
 }
 
-// userData.js
+export async function checkIfLoggedIn() {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/check-if-logged-in`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    const result = await response.json();
+
+    // if logged in, set sessionStorage to true
+    if (result.loggedIn) {
+      sessionStorage.setItem("loggedIn", "true");
+    }
+
+    return result.loggedIn;
+  } catch (err) {
+    console.log("Error checking if logged in. Returning false");
+    return false;
+  }
+}
 
 export async function fetchUserData() {
   try {
@@ -110,6 +132,71 @@ export async function fetchSimilarityData(user1_ID, user2_ID) {
     return result;
   } catch (err) {
     console.error("There was an error fetching similarity scores: ", err);
+    throw err;
+  }
+}
+
+// function to log out
+export async function logOut() {
+  // placeholders
+  let removedCookies = false;
+  let removedSessionData = false;
+  // request to remove cookies (refTkn and accTkn)
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/log-out`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Could not log out user. Error: ${response.body}`);
+    }
+
+    removedCookies = true;
+  } catch (err) {
+    console.error("There was an error logging out: ", err);
+    throw err;
+  }
+
+  // delete session storage
+  if (sessionStorage.getItem("loggedIn")) {
+    sessionStorage.removeItem("loggedIn");
+    removedSessionData = true;
+  }
+
+  if (removedCookies && removedSessionData) {
+    return {
+      message: "Successfully Logged Out",
+    };
+  } else {
+    return {
+      message: "Could Not Log Out",
+    };
+  }
+}
+
+export async function removeUserData() {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/api/spotify/remove-user-data`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Could not remove user data. Error: ${response.text()}`);
+    }
+
+    return {
+      message: "Removed user data",
+    };
+  } catch (err) {
+    console.log("Could not remove user data: " + err);
     throw err;
   }
 }

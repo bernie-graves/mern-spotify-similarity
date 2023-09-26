@@ -244,6 +244,69 @@ router.get("/redpage", async (req, res) => {
   }
 });
 
+router.get("/log-out", (req, res) => {
+  // remove refTKn and accTkn cookies
+  res.clearCookie("refTkn");
+  res.clearCookie("accTkn");
+
+  res.send("logged out and cookies removed");
+});
+
+router.get("/check-if-logged-in", async (req, res) => {
+  if (req.cookies.refTkn) {
+    return res.send(JSON.stringify({ loggedIn: true }));
+  } else {
+    return res.send(JSON.stringify({ loggedIn: false }));
+  }
+});
+
+router.get("/remove-user-data", accTknRefreshments, async (req, res) => {
+  // Get access token and refresh if needed
+  let accessToken;
+  try {
+    accessToken = setAccessToken(req);
+  } catch (error) {
+    console.log("Error with access token in favorites endpoint: " + error);
+    return res.status(404).send();
+  }
+
+  try {
+    const spotifyAPI = new SpotifyWebApi({ accessToken: accessToken });
+
+    // Get user id
+    const userID = (await spotifyAPI.getMe()).body.id;
+
+    // get references to collections
+    const usersCollection = db.collection("users");
+    const userFavsCollection = db.collection("user-favorites");
+    const friendTokenCollection = db.collection("add-friend-tokens");
+
+    // queries
+    const usersQuery = { id: userID };
+    const userFavsQuery = { userID: userID };
+    const friendTokenQuery = { senderID: userID };
+
+    // delete users documents from db
+    const usersResult = await usersCollection.deleteMany(usersQuery);
+    const userFavsResult = await userFavsCollection.deleteMany(userFavsQuery);
+    const friendTokenResult = await friendTokenCollection.deleteMany(
+      friendTokenQuery
+    );
+
+    console.log(`${usersResult.deletedCount} document(s) removed from users.`);
+    console.log(
+      `${userFavsResult.deletedCount} document(s) removed from user-favorites.`
+    );
+    console.log(
+      `${friendTokenResult.deletedCount} document(s) removed from add-friend-tokens.`
+    );
+
+    res.send("removed user data");
+  } catch (err) {
+    console.error("Error deleting user data: " + err);
+  }
+});
+
 // Favorites endpoint
 router.get("/favorites", accTknRefreshments, async (req, res) => {
   // Get access token and refresh if needed
@@ -622,6 +685,7 @@ router.get("/generate-share-link", accTknRefreshments, async (req, res) => {
   const token = generateRandomString(10);
   saveLinkToken(userID, token);
 
+  console.log("Generated Share Link");
   const protocol = req.protocol;
   const host = req.get("host");
 
