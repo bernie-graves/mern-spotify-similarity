@@ -66,6 +66,20 @@ function FriendsSimilarityPage() {
       let user1InUser2FriendsList_temp = false;
       let user2InUser1FriendsList_temp = false;
       try {
+        // make sure if new user they're favorites are scraped
+        const favesResponse = await fetch(
+          `${process.env.REACT_APP_BACKEND_URI}/api/spotify/favorites`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (!favesResponse.ok) {
+          throw new Error(
+            "Could not update user favorites before loading similarity page"
+          );
+        }
         const currentUserData = await fetchUserData();
 
         // find out which user is the current user
