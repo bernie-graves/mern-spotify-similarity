@@ -32,7 +32,7 @@ function SharePage() {
       {/* Set the title to show in link previews */}
       <HelmetProvider>
         <Helmet>
-          <title>Soundmate -- Friend Request</title>
+          <title>Soundmates | Friend Request</title>
         </Helmet>
       </HelmetProvider>
       <h3
