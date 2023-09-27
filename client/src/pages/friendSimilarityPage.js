@@ -28,6 +28,7 @@ function FriendsSimilarityPage() {
   const [shortTermScore, setShortTermScore] = useState(0);
   const [mediumTermScore, setMediumTermScore] = useState(0);
   const [longTermScore, setLongTermScore] = useState(0);
+  const [scoreComment, setScoreComment] = useState("");
 
   // shared songs, artists and genres
   const [sharedItems, setSharedItems] = useState({
@@ -124,6 +125,34 @@ function FriendsSimilarityPage() {
             setMediumTermScore(similarity_results.mediumTermScore);
             setLongTermScore(similarity_results.longTermScore);
             setMusicMatchScore(similarity_results.musicMatchScore);
+
+            const score_temp = similarity_results.musicMatchScore;
+
+            if (score_temp < 10) {
+              setScoreComment("Silence is golden");
+            } else if (score_temp < 20) {
+              setScoreComment("Treble in paradise!");
+            } else if (score_temp < 30) {
+              setScoreComment("Your future is sounding a tad ptichy");
+            } else if (score_temp < 40) {
+              setScoreComment("No roadtrips for you two");
+            } else if (score_temp < 50) {
+              setScoreComment("Hope you brought headphones!");
+            } else if (score_temp < 60) {
+              setScoreComment("Compromise is KEY!");
+            } else if (score_temp < 70) {
+              setScoreComment("Good enough to live in harmony");
+            } else if (score_temp < 80) {
+              setScoreComment("Looks like you're EAR-BUDS!");
+            } else if (score_temp < 85) {
+              setScoreComment("Music Match Made in Heaven!");
+            } else if (score_temp < 90) {
+              setScoreComment("Totally Tune Twins!");
+            } else if (score_temp < 95) {
+              setScoreComment("Practically Pitch Perfect!");
+            } else {
+              setScoreComment("Certified Soundmates!");
+            }
 
             setSharedItems({
               songsShortTerm: similarity_results.sharedSongsShortTerm,
@@ -232,11 +261,12 @@ function FriendsSimilarityPage() {
               />
 
               <SimilarityScoreDisplay
-                score={musicMatchScore}
+                score={musicMatchScore > 100 ? 100 : musicMatchScore}
                 radius={100}
                 strokeWidth={12}
               />
               <h3 style={{ padding: "10px" }}>Music Match Score</h3>
+              <h4>{scoreComment}</h4>
             </div>
             <div style={{ paddingBottom: "10px" }}>
               <div className="tabs">

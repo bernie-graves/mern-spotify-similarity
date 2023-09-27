@@ -13,6 +13,7 @@
     flex: 2;
     padding-left: 20px; /* Add padding for spacing */
     width: 100%;
+    margin-bottom: 50px;
   }
   
   .label {
@@ -24,7 +25,9 @@
   .content {
     /* Your content styling here */
     margin: auto;
+    margin-top: 10px;
     height: 400px;
+    overflow-y: auto;
   }
 
   /* Media query for mobile */

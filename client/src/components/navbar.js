@@ -76,7 +76,6 @@ function MyNavbar() {
   };
 
   useEffect(() => {
-    console.log("Navbar useEffect ran");
     const sessionStorageLoggedIn = sessionStorage.getItem("loggedIn");
     const isLoggedIn = sessionStorageLoggedIn === "true";
     setLoggedIn(isLoggedIn);

@@ -21,6 +21,9 @@ const SingleTermSimilarityDisplay = ({
   user2,
   term,
 }) => {
+  if (score > 100) {
+    score = 100;
+  }
   const [selectedTab, setSelectedTab] = useState("songs");
 
   // state vars to handle playlist generation request

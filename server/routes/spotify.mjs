@@ -505,6 +505,10 @@ router.get("/specific-user-data", accTknRefreshments, async (req, res) => {
 
     if (existingUser) {
       // if specific user exists in db return their doc
+
+      // remove _id and friends list from result -- dont need to send that to frontend
+      delete existingUser._id;
+
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       return res.status(200).send(JSON.stringify(existingUser, null, 2));
     } else {

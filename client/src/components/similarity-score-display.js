@@ -98,7 +98,7 @@ function SimilarityScoreDisplay({ score, radius, strokeWidth }) {
         fontSize={radius / 2} // Adjust font size based on radius
         fill="white"
       >
-        {score}
+        {normalizedScore}
       </text>
     </svg>
   );

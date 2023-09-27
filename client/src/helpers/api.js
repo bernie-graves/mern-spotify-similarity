@@ -1,6 +1,3 @@
-// api.js
-import Cookies from "js-cookie";
-
 export async function generateShareLink() {
   const CLIENT_URI =
     process.env.REACT_APP_CLIENT_URI ||
@@ -28,7 +25,11 @@ export async function generateShareLink() {
 
     const data = await response.json();
     const shareLink = data.shareLink;
-    return shareLink;
+
+    const returnLink = `${CLIENT_URI}/share?share_link=${encodeURIComponent(
+      shareLink
+    )}`;
+    return returnLink;
   } catch (err) {
     console.error("Error generating share link: ", err);
     throw err;
