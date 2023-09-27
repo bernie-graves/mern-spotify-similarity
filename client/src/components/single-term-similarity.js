@@ -178,7 +178,7 @@ const SingleTermSimilarityDisplay = ({
                   Success! Check your spotify library to find your new playlist!
                 </p>
               ) : (
-                <p>{"Could not create playlist :( Please try again"}</p>
+                <p>{"Could not create playlist :( "}</p>
               )}
             </div>
           )}
@@ -193,17 +193,19 @@ const SingleTermSimilarityDisplay = ({
           />
         </div>
 
-        <button
-          className="circular-button"
-          onClick={sendGeneratePlaylistRequest}
-        >
-          <span>Generate Playlist</span>
-          <img
-            style={{ width: "4.5vh", height: "4.5vh" }}
-            src={"/static/images/spotify-logo.png"}
-            alt="Spotify Logo"
-          />
-        </button>
+        {score > 0 && (
+          <button
+            className="circular-button"
+            onClick={sendGeneratePlaylistRequest}
+          >
+            <span>Generate Playlist</span>
+            <img
+              style={{ width: "4.5vh", height: "4.5vh" }}
+              src={"/static/images/spotify-logo.png"}
+              alt="Spotify Logo"
+            />
+          </button>
+        )}
       </div>
       <div className="right-panel">
         <div className="label">Shared Tastes</div>

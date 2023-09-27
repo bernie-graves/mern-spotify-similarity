@@ -735,67 +735,74 @@ router.post("/generate-playlist", accTknRefreshments, async (req, res) => {
   // prioritze in that order
   const preparedData = prepareDataForRecommender(songs, artists, genres);
 
-  // make request to spotify recommender endpoint
-  const recommendations = await spotifyAPI.getRecommendations({
-    limit: 50,
-    market: "US",
-    seed_tracks: preparedData.songIds,
-    seed_artists: preparedData.artistIds,
-    seed_genres: preparedData.genreNames,
-  });
+  try {
+    // make request to spotify recommender endpoint
+    const recommendations = await spotifyAPI.getRecommendations({
+      limit: 50,
+      market: "US",
+      seed_tracks: preparedData.songIds,
+      seed_artists: preparedData.artistIds,
+      seed_genres: preparedData.genreNames,
+    });
 
-  // recommended song objects to return in body for user to view on website
-  const recommendedSongs = recommendations.body.tracks.map((song) => ({
-    songName: song.name,
-    artistNames: song.artists.map((artist) => artist.name),
-    albumCover: song.album.images[0].url,
-    songID: song.id,
-  }));
+    // recommended song objects to return in body for user to view on website
+    const recommendedSongs = recommendations.body.tracks.map((song) => ({
+      songName: song.name,
+      artistNames: song.artists.map((artist) => artist.name),
+      albumCover: song.album.images[0].url,
+      songID: song.id,
+    }));
 
-  // recommended song ids to use to add to playlist
-  const recommendedSongIds = recommendations.body.tracks.map(
-    (song) => `spotify:track:${song.id}`
-  );
-
-  // make playlist
-  spotifyAPI
-    .createPlaylist(`${user1} and ${user2} Shared Tastes - ${term}`, {
-      description: `shared playlist created by Music Match for ${user1} and ${user2} based on shared interests in the ${term}`,
-      public: false,
-    })
-    .then(
-      function (data) {
-        // add to the playlist
-        const playlistId = data.body.id;
-        spotifyAPI.addTracksToPlaylist(playlistId, recommendedSongIds).then(
-          function (data) {
-            console.log("Added tracks to playlist!");
-          },
-          function (err) {
-            console.log(
-              "Something went wrong adding recommended tracks to playlist!",
-              err
-            );
-            return res.status(400).json({
-              message: "Failed to add songs to playlist",
-            });
-          }
-        );
-      },
-      function (err) {
-        console.log("Failed to create playlist :(", err);
-        return res.status(400).json({
-          message: "Failed to create playlist",
-        });
-      }
+    // recommended song ids to use to add to playlist
+    const recommendedSongIds = recommendations.body.tracks.map(
+      (song) => `spotify:track:${song.id}`
     );
 
-  // add recommended songs to the playlist
+    // make playlist
+    spotifyAPI
+      .createPlaylist(`${user1} and ${user2} Shared Tastes - ${term}`, {
+        description: `shared playlist created by Music Match for ${user1} and ${user2} based on shared interests in the ${term}`,
+        public: false,
+      })
+      .then(
+        function (data) {
+          // add to the playlist
+          const playlistId = data.body.id;
+          spotifyAPI.addTracksToPlaylist(playlistId, recommendedSongIds).then(
+            function (data) {
+              console.log("Added tracks to playlist!");
+            },
+            function (err) {
+              console.log(
+                "Something went wrong adding recommended tracks to playlist!",
+                err
+              );
+              return res.status(400).json({
+                message: "Failed to add songs to playlist",
+              });
+            }
+          );
+        },
+        function (err) {
+          console.log("Failed to create playlist :(", err);
+          return res.status(400).json({
+            message: "Failed to create playlist",
+          });
+        }
+      );
 
-  return res.status(200).json({
-    message: "Successfully created playlist",
-    playlistSongs: JSON.stringify(recommendedSongs),
-  });
+    // add recommended songs to the playlist
+
+    return res.status(200).json({
+      message: "Successfully created playlist",
+      playlistSongs: JSON.stringify(recommendedSongs),
+    });
+  } catch (err) {
+    console.log("Error generating playlist: " + err);
+    return res.status(400).json({
+      message: "Failed to create playlist",
+    });
+  }
 });
 
 function prepareDataForRecommender(songs, artists, genres) {
