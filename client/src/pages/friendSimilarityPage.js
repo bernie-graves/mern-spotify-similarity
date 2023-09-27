@@ -13,8 +13,10 @@ import SingleTermSimilarityDisplay from "../components/single-term-similarity";
 function FriendsSimilarityPage() {
   const [user1_ID, setUser1_ID] = useState();
   const [user1_ImageURL, setUser1_ImageURL] = useState();
+  const [user1_name, setUser1_name] = useState();
   const [user2_ID, setUser2_ID] = useState();
   const [user2_ImageURL, setUser2_ImageURL] = useState();
+  const [user2_name, setUser2_name] = useState();
   const [isUser1, setIsUser1] = useState();
   const [isUser2, setIsUser2] = useState();
   const [user2InUser1FriendsList, setUser2InUser1FriendsList] = useState();
@@ -85,10 +87,12 @@ function FriendsSimilarityPage() {
         // find out which user is the current user
         if (currentUserData.id === user1_ID_temp) {
           setUser1_ImageURL(currentUserData.profileImageUrl);
+          setUser1_name(currentUserData.displayName);
           setIsUser1(true);
           isUser1_temp = true;
         } else if (currentUserData.id === user2_ID_temp) {
           setUser2_ImageURL(currentUserData.profileImageUrl);
+          setUser2_name(currentUserData.displayName);
           setIsUser2(true);
           isUser2_temp = true;
         } else {
@@ -113,6 +117,7 @@ function FriendsSimilarityPage() {
             setUser1InUser2FriendsList(user1InUser2FriendsList_temp);
 
             setUser2_ImageURL(user2Data.profileImageUrl);
+            setUser2_name(user2Data.displayName);
           }
 
           // if is user 2 check if in each other friends lists and set state vars for user1
@@ -128,6 +133,7 @@ function FriendsSimilarityPage() {
             setUser2InUser1FriendsList(user2InUser1FriendsList_temp);
 
             setUser1_ImageURL(user1Data.profileImageUrl);
+            setUser1_name(user1Data.displayName);
           }
 
           if (user1InUser2FriendsList_temp && user2InUser1FriendsList_temp) {
@@ -270,8 +276,8 @@ function FriendsSimilarityPage() {
               <ProfilePicComparison
                 imageUrl1={user1_ImageURL}
                 imageUrl2={user2_ImageURL}
-                user1={user1_ID}
-                user2={user2_ID}
+                user1={user1_name}
+                user2={user2_name}
               />
               <h3 style={{ padding: "20px" }}>Music Match Score</h3>
               <SimilarityScoreDisplay
