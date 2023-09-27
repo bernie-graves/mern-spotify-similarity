@@ -743,6 +743,7 @@ router.post("/generate-playlist", accTknRefreshments, async (req, res) => {
       seed_tracks: preparedData.songIds,
       seed_artists: preparedData.artistIds,
       seed_genres: preparedData.genreNames,
+      min_popularity: 65,
     });
 
     // recommended song objects to return in body for user to view on website
