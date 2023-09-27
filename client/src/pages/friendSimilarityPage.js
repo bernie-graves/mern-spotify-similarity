@@ -149,29 +149,29 @@ function FriendsSimilarityPage() {
             const score_temp = similarity_results.musicMatchScore;
 
             if (score_temp < 10) {
-              setScoreComment("Silence is golden");
+              setScoreComment("Silence is golden 🤐");
             } else if (score_temp < 20) {
-              setScoreComment("Treble in paradise!");
+              setScoreComment("Treble in paradise! 🫣");
             } else if (score_temp < 30) {
-              setScoreComment("Your future is sounding a tad ptichy");
+              setScoreComment("Your future is sounding a tad ptichy 🚨");
             } else if (score_temp < 40) {
-              setScoreComment("No roadtrips for you two");
+              setScoreComment("No roadtrips for you two! 😬 🚗❌");
             } else if (score_temp < 50) {
-              setScoreComment("Hope you brought headphones!");
+              setScoreComment("Hope you brought headphones! 🎧");
             } else if (score_temp < 60) {
-              setScoreComment("Compromise is KEY!");
+              setScoreComment("Compromise is KEY! 🎹 🔑");
             } else if (score_temp < 70) {
-              setScoreComment("Good enough to live in harmony");
+              setScoreComment("Good enough to live in harmony 🎵");
             } else if (score_temp < 80) {
-              setScoreComment("Looks like you're EAR-BUDS!");
+              setScoreComment("Looks like you're EAR-BUDS! 🤜🤛");
             } else if (score_temp < 85) {
-              setScoreComment("Music Match Made in Heaven!");
+              setScoreComment("Music Match Made in Heaven! ☁️");
             } else if (score_temp < 90) {
-              setScoreComment("Totally Tune Twins!");
+              setScoreComment("Totally Tune Twins! 🕺🕺");
             } else if (score_temp < 95) {
-              setScoreComment("Practically Pitch Perfect!");
+              setScoreComment("Practically Pitch Perfect! 👌");
             } else {
-              setScoreComment("Certified Soundmates!");
+              setScoreComment("Certified Soundmates! 🫶");
             }
 
             setSharedItems({
