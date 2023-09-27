@@ -259,14 +259,14 @@ function FriendsSimilarityPage() {
                 user1={user1_ID}
                 user2={user2_ID}
               />
-
+              <h3 style={{ padding: "20px" }}>Music Match Score</h3>
               <SimilarityScoreDisplay
                 score={musicMatchScore > 100 ? 100 : musicMatchScore}
                 radius={100}
                 strokeWidth={12}
               />
-              <h3 style={{ padding: "10px" }}>Music Match Score</h3>
-              <h4>{scoreComment}</h4>
+
+              <h4 style={{ paddingTop: "15px" }}>{scoreComment}</h4>
             </div>
             <div style={{ paddingBottom: "10px" }}>
               <div className="tabs">
