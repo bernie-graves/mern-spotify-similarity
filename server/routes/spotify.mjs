@@ -8,8 +8,7 @@ const PORT = process.env.PORT || 5050;
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_KEY = process.env.SECRET_KEY;
 const RED_URI =
-  process.env.RED_URI ||
-  `https://server.soundmates-for-spotify.com/api/spotify/redpage`;
+  process.env.RED_URI || `http://localhost:5050/api/spotify/redpage`;
 
 const localCookieSettings = {};
 
@@ -762,7 +761,7 @@ router.post("/generate-playlist", accTknRefreshments, async (req, res) => {
     // make playlist
     spotifyAPI
       .createPlaylist(`${user1} and ${user2} Shared Tastes - ${term}`, {
-        description: `shared playlist created by Music Match for ${user1} and ${user2} based on shared interests in the ${term}`,
+        description: `shared playlist created by Soundmates for ${user1} and ${user2} based on shared interests in the ${term}`,
         public: false,
       })
       .then(

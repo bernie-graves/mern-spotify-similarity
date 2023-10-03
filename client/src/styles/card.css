@@ -88,6 +88,7 @@
     background-color: #2d2d2d;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease; /* Smooth transform transition */
+    width: 95%;
   }
   
   /* Add hover effect for FriendCard */
@@ -146,6 +147,16 @@
   margin-bottom: 20px; /* Add some space below the row */
 }
 
+
+.friends-list {
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: visible;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .line {
   border: none;
   border-top: 1px solid #ccc; /* Thin horizontal line */
