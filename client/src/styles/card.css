@@ -2,7 +2,6 @@
     background-color: #333; /* Dark grey background */
     color: whitesmoke; /* White text color */
     display: flex;
-    border-radius: 8px;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-right: auto;
@@ -37,8 +36,8 @@
     }
   
   .album-cover {
-    width: 100px; /* Adjust the width as needed */
-    height: 100px; /* Adjust the height as needed */
+    width: 125px; /* Adjust the width as needed */
+    height: 125px; /* Adjust the height as needed */
     margin-right: 10px;
   }
   
