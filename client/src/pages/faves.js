@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/CircularButton.css";
 import SongCard from "../components/song-card";
 import ArtistCard from "../components/artist-card";
-import "../styles/Tab.css"; // Import the CSS file
+import "../styles/Tab.css";
 import "../styles/scroll-bars.css";
 import "../styles/card.css";
 
@@ -103,8 +103,7 @@ function FavesPage() {
     fetchUserFavorites();
     setRequestMade(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array ensures this effect runs once, on component mount
-
+  }, []);
   return (
     <header className="App-header">
       <div>
@@ -112,7 +111,7 @@ function FavesPage() {
           <div>Loading...</div>
         ) : requestMade ? (
           <div>
-            <h2 style={{ color: "whitesmoke" }}>Your Favorites:</h2>
+            <h2 style={{ color: "whitesmoke" }}>Your Favorites</h2>
             <div
               style={{
                 paddingBottom: "10px",
@@ -170,15 +169,19 @@ function FavesPage() {
               </div>
             </div>
             <div className="card-container custom-scrollbar">
-              {activeTypeTab === "songs"
-                ? songData[activeTab] &&
+              {songData[activeTab] && songData[activeTab].length > 0 ? (
+                activeTypeTab === "songs" ? (
                   songData[activeTab].map((song, index) => (
                     <SongCard key={index} {...song} />
                   ))
-                : songData[activeTab] &&
+                ) : (
                   artistData[activeTab].map((artist, index) => (
                     <ArtistCard key={index} {...artist} />
-                  ))}
+                  ))
+                )
+              ) : (
+                <p>Please refresh the page.</p>
+              )}
             </div>
           </div>
         ) : (
