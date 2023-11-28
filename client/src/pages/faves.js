@@ -180,7 +180,9 @@ function FavesPage() {
                   ))
                 )
               ) : (
-                <p>Please refresh the page.</p>
+                <p style={{ color: "#b6b5b5" }}>
+                  Try refreshing the page if results don't appear.
+                </p>
               )}
             </div>
           </div>
