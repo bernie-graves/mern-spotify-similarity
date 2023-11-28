@@ -403,8 +403,27 @@ router.get("/favorites", accTknRefreshments, async (req, res) => {
           console.log(`Updated existing document in the collection`);
         }
 
+        // Create an array to store the results
+        const results = [];
+
+        // Loop through each time frame and type (songs and artists)
+        await Promise.all(
+          time_frames.map(async (time_frame) => {
+            ["songs", "artists"].forEach(async (type) => {
+              const key = `${type}_${time_frame}`;
+              if (userFavs[key]) {
+                // Create an object for each time frame and type
+                const resultItem = {
+                  [`${type}_${time_frame}`]: userFavs[key],
+                };
+                results.push(resultItem);
+              }
+            });
+          })
+        );
+
         // Send favorites data back to frontend
-        return res.status(200).send(JSON.stringify(userFavs, null, 2));
+        return res.status(200).send(JSON.stringify(results, null, 2));
       } catch (err) {
         console.error("Error inserting or updating document:", err);
         return res.status(404).send();
